@@ -1,0 +1,5 @@
+VAO - vertex array object, contains:
+	VBO - Vertex Buffer Object - vertices
+	EBO - Element Buffer Object - indicies
+Can't unbind ebo before undbinding vao
+	otherwise ebo will be lost
