@@ -25,8 +25,8 @@ int main()
 
 	std::vector<GLuint> indices = 
 	{
-		0, 1, 3,  // first shaderangle
-		1, 2, 3   // second shaderangle
+		0, 1, 3,  // first triangle
+		1, 2, 3   // second triangle
 	};
 
 	unsigned int VAO, VBO, EBO;
