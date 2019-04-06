@@ -1,19 +1,39 @@
 #include "Shader.h"
 #include "Window.h"
 #include "Texture.h"
+#include "Sum_Scan.cuh"
+//#include "kernel.cuh"
 
 #include <iostream>
 
 int main()
 {
-	int s = 1;
+	int s = 3;
 	Window win = Window("Depth of Field", s * 512, s * 512, glm::vec4(0, 1, 1, 0));
-	Texture texture = Texture("res/sun.png");
 	Shader shader = Shader();
 	shader.addVertexShader("res/RectVS.txt");
 	shader.addFragmentShader("res/RectFS.txt");
 	shader.compileShader();
 
+	int width, height, num_channels;
+	unsigned char* tex_data = NULL;
+	Texture::load_data("res/sun.png", &tex_data, &width, &height, &num_channels);
+
+	for (int i = 0; i < width; i++)
+	{
+		for (int j = 0; j < height; j++)
+		{
+			unsigned char* pixel = tex_data + (i * width + j) * num_channels;
+			pixel[0] = (float)i / (float) width * 255.0;
+			pixel[1] = (float)j / (float)width * 255.0;
+			pixel[2] = 0;
+		}
+	}
+
+	main1();
+
+	Texture texture = Texture(tex_data, width, height, num_channels);
+	
 	std::vector<GLfloat> data = 
 	{
 		//Positions		UVs
@@ -76,4 +96,6 @@ int main()
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &EBO);
+
+	return 0;
 }

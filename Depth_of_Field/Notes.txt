@@ -3,3 +3,24 @@ VAO - vertex array object, contains:
 	EBO - Element Buffer Object - indicies
 Can't unbind ebo before undbinding vao
 	otherwise ebo will be lost
+
+Pass a pointer to something you want to change
+	A pointer to a pointer necessary if that pointer needs to be changed
+	Otherwise that pointer value is passed, not the reference
+	https://stackoverflow.com/a/5611848
+
+Renaming solution in the future:
+https://stackoverflow.com/a/33195945
+
+If you get nvcc fatal   : A single input file is required for a non-link phase when an outputfile is specified
+	non trivial problem with trivial solution, change intermediates folder from
+		$(SolutionDir)$(Platform)\$(Configuration)\Intermediates\
+		to
+		..\$(Platform)\$(Configuration)\Intermediates\
+	Other possible answers are having spaces in build names (eg: Inter mediates)
+		extra quotes -> compiler might interpret differently (eg: "\"Intermediates"dfs", take out inner)
+		etc.:
+				https://stackoverflow.com/questions/55227923/how-to-edit-visual-studio-cuda-nvcc-exe-command-line
+				http://idav.ucdavis.edu/~anjul/cudaErrors.htm
+				https://gitlab.kitware.com/cmake/cmake/issues/17535
+				https://github.com/KlausT/ccminer/issues/263

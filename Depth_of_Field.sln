@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Depth_of_Field", "Depth_of_Field\Depth_of_Field.vcxproj", "{535664D5-6CEA-418D-95EC-160C7DF3627C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sum", "Sum\Sum.vcxproj", "{821473CA-0415-4E0F-8144-7A7F505C9E9F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -15,6 +17,10 @@ Global
 		{535664D5-6CEA-418D-95EC-160C7DF3627C}.Debug|x64.Build.0 = Debug|x64
 		{535664D5-6CEA-418D-95EC-160C7DF3627C}.Release|x64.ActiveCfg = Release|x64
 		{535664D5-6CEA-418D-95EC-160C7DF3627C}.Release|x64.Build.0 = Release|x64
+		{821473CA-0415-4E0F-8144-7A7F505C9E9F}.Debug|x64.ActiveCfg = Debug|x64
+		{821473CA-0415-4E0F-8144-7A7F505C9E9F}.Debug|x64.Build.0 = Debug|x64
+		{821473CA-0415-4E0F-8144-7A7F505C9E9F}.Release|x64.ActiveCfg = Release|x64
+		{821473CA-0415-4E0F-8144-7A7F505C9E9F}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
