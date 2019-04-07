@@ -1,15 +1,16 @@
 #include "Shader.h"
 #include "Window.h"
 #include "Texture.h"
-#include "cuda/deinterleave.cuh"
-#include "cuda/summed_area_table.cuh"
+#include "Sum_Scan.cuh"
+//#include "kernel.cuh"
 
-#include <fstream>
 #include <iostream>
 
 int main()
 {
-	Window win = Window("Depth of Field", 3 * 512, 3 * 512, glm::vec4(0, 1, 1, 0));
+	int s = 3;
+	Window win = Window("Depth of Field", s * 512, s * 512, glm::vec4(0, 1, 1, 0));
+	Texture texture = Texture("res/sun.png");
 	
 	Shader shader = Shader();
 	shader.addVertexShader("res/RectVS.txt");
@@ -17,74 +18,23 @@ int main()
 	shader.compileShader();
 
 	int width, height, num_channels;
-	unsigned char* img = NULL;
-	Texture::load_data("res/lena_256.png", &img, &width, &height, &num_channels);
+	unsigned char* tex_data = NULL;
+	//Texture::load_data("res/sun.png", &tex_data, &width, &height, &num_channels);
 
-	unsigned int N = width;
+	//for (int i = 0; i < width; i++)
+	//{
+	//	for (int j = 0; j < height; j++)
+	//	{
+	//		unsigned char* pixel = tex_data + (i * width + j) * num_channels;
+	//		pixel[0] = (float)i / (float) width * 255.0;
+	//		pixel[1] = (float)j / (float)width * 255.0;
+	//		pixel[2] = 0;
+	//	}
+	//}
 
+	//main1();
 
-	unsigned int* r = (unsigned int*)malloc(N * N * sizeof(int));
-	unsigned int* g = (unsigned int*)malloc(N * N * sizeof(int));
-	unsigned int* b = (unsigned int*)malloc(N * N *sizeof(int));
-	
-	deinterleave(img, N * N, &r, &g, &b);
-	summed_area_table(r, N);
-	summed_area_table(g, N);
-	summed_area_table(b, N);
-
-	/*std::ofstream myfile;
-	myfile.open("red.csv");
-	for (int i = 0; i < N; i++)
-	{
-		for (int j = 0; j < N; j++)
-		{
-			myfile << r[i * N + j] << ",";
-		}
-		myfile << "\n";
-	}
-	myfile.close();
-
-	myfile.open("blue.csv");
-	for (int i = 0; i < N; i++)
-	{
-		for (int j = 0; j < N; j++)
-		{
-			myfile << b[i * N + j] << ",";
-		}
-		myfile << "\n";
-	}
-	myfile.close();
-
-	myfile.open("green.csv");
-	for (int i = 0; i < N; i++)
-	{
-		for (int j = 0; j < N; j++)
-		{
-			myfile << g[i * N + j] << ",";
-		}
-		myfile << "\n";
-	}
-	myfile.close();*/
-
-	std::cout << r[N * N - 1] << " " << g[N * N - 1] << " " << b[N * N - 1] << " " << std::endl;
-
-	for (int i = 0; i < width; i++)
-	{
-		for (int j = 0; j < height; j++)
-		{
-			unsigned int tid = i * width + j;
-			unsigned char* pixel = img + tid * num_channels;
-			pixel[0] = (float)(r[tid]) / (float)(255 * 512 * 512) * 255.0;
-			pixel[1] = (float)(g[tid]) / (float)(255 * 512 * 512) * 255.0;
-			pixel[2] = (float)(b[tid]) / (float)(255 * 512 * 512) * 255.0;
-		}
-	}
-
-	free(r);
-	free(g);
-	free(b);
-
-	Texture texture = Texture(img, width, height, num_channels);
+	//Texture texture = Texture(tex_data, width, height, num_channels);
 	
 	std::vector<GLfloat> data = 
 	{

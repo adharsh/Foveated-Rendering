@@ -24,3 +24,12 @@ If you get nvcc fatal   : A single input file is required for a non-link phase w
 				http://idav.ucdavis.edu/~anjul/cudaErrors.htm
 				https://gitlab.kitware.com/cmake/cmake/issues/17535
 				https://github.com/KlausT/ccminer/issues/263
+
+Visual studio not detecing cu file changes:
+	https://devtalk.nvidia.com/default/topic/1029759/cuda-setup-and-installation/visual-studio-2017-not-detecting-changes-in-cuda-cu-files/2
+
+Thrust
+	https://stackoverflow.com/questions/7678995/from-thrustdevice-vector-to-raw-pointer-and-back
+
+Cuda Thread Block Indexing:
+	https://github.com/andreajeka/CUDAThreadIndexing
