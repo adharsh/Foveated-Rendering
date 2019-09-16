@@ -28,6 +28,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="Notes.txt" />
+    <Text Include="Questions.txt" />
     <Text Include="Resources.txt" />
   </ItemGroup>
   <ItemGroup>

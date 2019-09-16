@@ -1,0 +1,49 @@
+Can do a lot of things with it:
+	3D environments -> since they're static, compute one SAT and perform blurs
+	Foveated rendering involves one eye left and one eye right as separate passes
+		Can just do once
+	Companies like AT&T and Netflix -> can save bandwidth
+	
+	just pass in SAT instead of actual frames of video, code will simply take looking point
+	no extra processing
+		instead of specialized hardware that has to do all kinds of computation for blurring
+ 
+
+Still don't understand overall goal of project, why sending this to other servers more efficient?
+	You also said goal was to find an efficient data structure?
+
+I understand what aDon't understand what a "restricted quad tree" is and purpose of it
+
+Previously in notes you had mentioned to create a SAT twice as large, didn't understand why?
+
+How does formula work? http://hipersayanx.blogspot.com/2015/07/integral-image-and-image-blur.html work
+Intuition and stuff
+
+It was really hard to find resourcses that explain this stuff
+	Specific books with proofs of the math
+	Specific foveated rendering papers you had in mind
+
+The goals by next week, have a general outline of the paper, which format? NeuroIPS? Any guidelines for this?
+Have the complete demo working -> explain why the summed area table is slow tho, the week after that is fixing that
+
+
+Ph.D. students just in case
+
+Also working on this other project
+Better computer with more cuda cores -> access to workstations
+
+
+___________________________________
+1. summed area table replaces conv filter, to compute the blur effect?
+But how to create a circle if it's square?
+https://www.youtube.com/watch?v=GKR8tM28NnQ
+https://www.youtube.com/watch?v=VOpC-xEaB-Q
+
+2. When you're rendernig the blurred image, the shader is still sampling from the texture and blurring it, its not sampling less, so why is this more efficient?
+
+https://www.youtube.com/watch?v=GKR8tM28NnQ
+https://www.youtube.com/watch?v=VOpC-xEaB-Q
+
+3. Why a larger map, twice the size for points on corners?
+
+3.5. Couldn't find anything on "restricted" Quadtrees, wdym?:

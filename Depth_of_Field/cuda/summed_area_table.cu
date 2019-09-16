@@ -13,8 +13,6 @@
 // This example computes a summed area table using segmented scan
 // http://en.wikipedia.org/wiki/Summed_area_table
 
-
-
 // convert a linear index to a linear index in the transpose 
 struct transpose_index : public thrust::unary_function<size_t, size_t>
 {

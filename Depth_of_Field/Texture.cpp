@@ -1,5 +1,7 @@
 #define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
+#include <stb/stb_image.h>
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <stb/stb_image_write.h>
 #include <iostream>
 #include <vector>
 
@@ -42,9 +44,19 @@ void Texture::load_data(const std::string& filepath, unsigned char** out_data, i
 	*out_data = stbi_load(filepath.c_str(), out_width, out_height, out_num_channels, 0);
 }
 
-Texture::Texture(const unsigned char* data, int width, int height, int num_channels, bool interpolate)
+void Texture::write_to_png(const std::string& filepath)
 {
-	this->data = NULL;
+	stbi_flip_vertically_on_write(1); //non-zero value
+	stbi_write_png(filepath.c_str(), width, height, num_channels, data, height * num_channels);
+}
+
+Texture::Texture(unsigned char* data, int width, int height, int num_channels, bool interpolate)
+{
+	this->data = data;
+	this->width = width;
+	this->height = height;
+	this->num_channels = num_channels;
+
 	glGenTextures(1, &texture_id);
 	glBindTexture(GL_TEXTURE_2D, texture_id);
 	// set the texture wrapping parameters
@@ -67,14 +79,13 @@ Texture::Texture(const unsigned char* data, int width, int height, int num_chann
 	{
 		std::cout << "Passed in image data is null" << std::endl;
 	}
-
+	
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 const std::vector<int> Texture::getPixelValue(unsigned int row, unsigned int col) const
 {
-	unsigned bytePerPixel = num_channels;
-	unsigned char* pixelOffset = data + (row * getWidth() +  col) * bytePerPixel;
+	unsigned char* pixelOffset = data + (row * getWidth() +  col) * num_channels;
 	unsigned char r = pixelOffset[0];
 	unsigned char g = pixelOffset[1];
 	unsigned char b = pixelOffset[2];
