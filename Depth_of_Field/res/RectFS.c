@@ -38,9 +38,9 @@ void main()
 	//somehow always 9, doesn't change
 	//pos_coord is right, but box_coords is not working
 	ivec2 id = ivec2(N-1, N-1);
-	while(id.x >= 0 && abs(pos_coord.x) < box_coords[id.x])
+	while(id.x >= 0 && abs(dist_coord.x) < box_coords[id.x])
 		id.x--;
-	while(id.y >= 0 && abs(pos_coord.y) < box_coords[id.y])
+	while(id.y >= 0 && abs(dist_coord.y) < box_coords[id.y])
 		id.y--;
 
 	ivec2 box_coord = ivec2( box_coords[id.x], box_coords[id.y] ); //why are box_coord and box_dim different
