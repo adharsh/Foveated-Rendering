@@ -19,7 +19,7 @@ public:
 	~Texture();
 	void deleteTexture() const;
 
-	void write_to_png(const std::string& filepath);
+	void write_to_bmp(const std::string& filepath);
 
 	static void load_data(const std::string& filepath, unsigned char** out_data, int* out_width, int* out_height, int* out_num_channels);
 	

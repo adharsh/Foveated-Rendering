@@ -12,7 +12,8 @@
 
 int main()
 {
-	Window win = Window("Depth of Field", 5 * 256, 5 * 256, glm::vec4(0, 1, 1, 0));
+	int dim = 256;
+	Window win = Window("Depth of Field", 5 * dim, 5 * dim, glm::vec4(0, 1, 1, 0));
 
 	Shader shader = Shader();
 	shader.addVertexShader("res/RectVS.c");
@@ -21,11 +22,10 @@ int main()
 
 	int width, height, num_channels;
 	unsigned char* img = NULL;
-	//Texture::load_data("res/lena_256.png", &img, &width, &height, &num_channels);
-	Texture::load_data("res/lenaSAT_256.png", &img, &width, &height, &num_channels);
+	Texture::load_data("res/sat256.bmp", &img, &width, &height, &num_channels);
 
 #if 0
-
+	Texture::load_data("res/lena_256.png", &img, &width, &height, &num_channels);
 	unsigned int N = width;
 	//TODO: why malloc
 	unsigned int* r = (unsigned int*)malloc(N * N * sizeof(int));
@@ -37,42 +37,6 @@ int main()
 	summed_area_table(g, N);
 	summed_area_table(b, N);
 
-	/*std::ofstream myfile;
-	myfile.open("red.csv");
-	for (int i = 0; i < N; i++)
-	{
-		for (int j = 0; j < N; j++)
-		{
-			myfile << r[i * N + j] << ",";
-		}
-		myfile << "\n";
-	}
-	myfile.close();
-
-	myfile.open("blue.csv");
-	for (int i = 0; i < N; i++)
-	{
-		for (int j = 0; j < N; j++)
-		{
-			myfile << b[i * N + j] << ",";
-		}
-		myfile << "\n";
-	}
-	myfile.close();
-
-	myfile.open("green.csv");
-	for (int i = 0; i < N; i++)
-	{
-		for (int j = 0; j < N; j++)
-		{
-			myfile << g[i * N + j] << ",";
-		}
-		myfile << "\n";
-	}
-	myfile.close();*/
-
-	//std::cout << r[N * N - 1] << " " << g[N * N - 1] << " " << b[N * N - 1] << " " << std::endl;
-
 	for (int i = 0; i < width; i++)
 	{
 		for (int j = 0; j < height; j++)
@@ -82,26 +46,45 @@ int main()
 			/*pixel[0] = (float)(r[tid]) / (float)(255 * 512 * 512) * 255.0;
 			pixel[1] = (float)(g[tid]) / (float)(255 * 512 * 512) * 255.0;
 			pixel[2] = (float)(b[tid]) / (float)(255 * 512 * 512) * 255.0;*/
-			pixel[0] = 4 * (float)(r[tid]) / (float)(255 * 512 * 512) * 255.0;
-			pixel[1] = 4 * (float)(g[tid]) / (float)(255 * 512 * 512) * 255.0;
-			pixel[2] = 4 * (float)(b[tid]) / (float)(255 * 512 * 512) * 255.0;
+			pixel[0] = (float)(r[tid]) / (float)(255 * dim * dim) * 255.0;
+			pixel[1] = (float)(g[tid]) / (float)(255 * dim * dim) * 255.0;
+			pixel[2] = (float)(b[tid]) / (float)(255 * dim * dim) * 255.0;
 		}
 	}
-
+	
 	free(r);
 	free(g);
 	free(b);
+
+	std::ofstream myfile;
+	myfile.open("res/or_sat256.csv");
+
+	for (int r = height - 1; r >= 0; r--)
+	{
+		for (int c = 0; c < width; c++)
+		{
+			unsigned char* pix = img + (c + r * width) * num_channels;
+
+			myfile << "(";
+			for (int i = 0; i < num_channels; i++)
+				myfile << (int)pix[i] << ":";
+			myfile << "),";
+		}
+		myfile << "\n";
+	}
+	myfile.close();
 #endif
 
 	Texture texture = Texture(img, width, height, num_channels);
-
+	//texture.write_to_bmp("res/sat256.bmp");
 
 	//id - 1 -> lower-left rect coord val
 	//-1 -> can't use, the same val
 	//0 -> 3, can't use (base case)
 	//1 -> 6, box_dim = (array[1] - array[0])*3
 	//etc.
-	int num_boxes = (int)(std::log(std::max(width, height)) / std::log(3));
+	//int num_boxes = (int)(std::log(std::max(width, height)) / std::log(3));
+	int num_boxes = 10;
 	int* box_coords = new int[num_boxes];
 	box_coords[0] = 0;
 	box_coords[1] = 2;
@@ -151,9 +134,10 @@ int main()
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
+	//box_coords = new int[num_boxes];
 	//only have to do once, not too slow since only once
+	shader.bind();
 	shader.setUniform1iv("box_coords", box_coords, num_boxes);
-	std::cout << texture.getWidth() << " " << texture.getHeight() << std::endl;
 	shader.setUniform1f("width", texture.getWidth()); //don't worry about scaling, it's gonna end up as [0,1] anyways
 	shader.setUniform1f("height", texture.getHeight());
 	while (!win.closed())

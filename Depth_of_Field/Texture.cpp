@@ -44,10 +44,10 @@ void Texture::load_data(const std::string& filepath, unsigned char** out_data, i
 	*out_data = stbi_load(filepath.c_str(), out_width, out_height, out_num_channels, 0);
 }
 
-void Texture::write_to_png(const std::string& filepath)
+void Texture::write_to_bmp(const std::string& filepath)
 {
 	stbi_flip_vertically_on_write(1); //non-zero value
-	stbi_write_png(filepath.c_str(), width, height, num_channels, data, height * num_channels);
+	stbi_write_bmp(filepath.c_str(), width, height, num_channels, data);
 }
 
 Texture::Texture(unsigned char* data, int width, int height, int num_channels, bool interpolate)
@@ -89,9 +89,11 @@ const std::vector<int> Texture::getPixelValue(unsigned int row, unsigned int col
 	unsigned char r = pixelOffset[0];
 	unsigned char g = pixelOffset[1];
 	unsigned char b = pixelOffset[2];
-	unsigned char a = num_channels >= 4 ? pixelOffset[3] : 0xff;
 
-	return { r, g, b, a };
+	if(num_channels >= 4)
+		return {r, g, b, pixelOffset[3]};
+	
+	return {r, g, b};
 };
 
 Texture::~Texture()

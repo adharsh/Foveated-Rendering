@@ -6,7 +6,7 @@ out vec4 fragColor;
 
 uniform sampler2D texture_sampler;
 uniform vec2 eye_pos; //[-1,1]
-uniform int box_coords[N]; 
+uniform int box_coords[N];
 uniform float width;
 uniform float height;
 
@@ -33,11 +33,15 @@ void main()
 	vec2 dist_coord = pos_coord - eye_coord;
 
 	//*1* \/ \/ \/ below id is always same why
+	//like before, copy and paste into new visual studio and try out if it works by value
+	//also for debugging render each variable
+	//somehow always 9, doesn't change
+	//pos_coord is right, but box_coords is not working
 	vec2 id = vec2(N-1, N-1);
 	while(int(id.x) >= 0 && abs(int(pos_coord.x)) < box_coords[int(id.x)])
-		id.x = id.x - 1;
+		id.x--;
 	while(int(id.y) >= 0 && abs(int(pos_coord.y)) < box_coords[int(id.y)])
-		id.y = id.y - 1;
+		id.y--;
 
 	vec2 box_coord = vec2( box_coords[int(id.x)], box_coords[int(id.y)] ); //why are box_coord and box_dim different
 	
@@ -113,9 +117,15 @@ void main()
 	vec2 C = vec2(lowerleft_pos.x, upperright_pos.y);
 	vec2 D = upperright_pos;
 
+	//pixel[1] = (float)(g[tid]) / (float)(255 * dim * dim) * 255.0;
+	//255 * 256 * 256
 	fragColor = texture(texture_sampler, D) - texture(texture_sampler, B) - texture(texture_sampler, C) + texture(texture_sampler, A);
 	fragColor.w = 1;
 
+	
+	//if (lower_pos == uv)
+	//	fragColor = vec4(1.0f);
+	//fragColor = texture(texture_sampler, upperright_pos - lowerleft_pos);
 	//fragColor = vec4((eye_pos.xy + 1.0f) / 2.0f, 0.0f, 1.0f);
 	//fragColor = vec4((pos.xy + 1.0f) / 2.0f, 0.0f, 1.0f);
 
@@ -123,10 +133,9 @@ void main()
 	//fragColor = vec4((eye_coord.x + width / 2) / (width - 1), (eye_coord.y + height / 2) / (height - 1), 0.0f, 1.0f);
 	//fragColor =  vec4((pos_coord.x + width / 2.0f) / (width - 1.0f), (pos_coord.y + height / 2.0f) / (height - 1), 0.0f, 1.0f);
 
-	fragColor = vec4(id.xy/9.0f, 0.0f, 1.0f);
-	//fragColor = vec4(box_dim.xy/3.0f, 0.0f, 1.0f);
+	//fragColor = vec4(id.xy/9.0f, 0.0f, 1.0f);
+	fragColor = vec4(box_dim.xy/3.0f, 0.0f, 1.0f);
 	
-
 	//fragColor = vec4(lowerleft_pos.xy, 0.0f, 1.0f);
 	
 	//fragColor = vec4((float(pos_coord.x) + width / 2.0f) / (width - 1.0f), (float(pos_coord.y) + height / 2.0f) / (height - 1.0f), 0.0f, 1.0f);
