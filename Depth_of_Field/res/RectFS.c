@@ -28,34 +28,34 @@ void main()
 	//cast these into int vectors, force into range [imagedim,imagedim]
 	//coord is [-imagedim/2, imagedim/2], pos is [-1,1], uv is [0,1]
 	//converting from pos to coord
-	vec2 pos_coord = vec2((uv.x*(width - 1.0f) - width / 2.0f), (uv.y*(height - 1.0f) - height / 2.0f));
-	vec2 eye_coord = vec2( ((eye_pos.x + 1.0f)/2.0f*(width - 1.0f) - width/2.0f), ((eye_pos.y + 1.0f)/2.0f*(height - 1.0f) - height/2.0f) );
-	vec2 dist_coord = pos_coord - eye_coord;
+	ivec2 pos_coord = ivec2((uv.x*(width - 1.0f) - width / 2.0f), (uv.y*(height - 1.0f) - height / 2.0f));
+	ivec2 eye_coord = ivec2( ((eye_pos.x + 1.0f)/2.0f*(width - 1.0f) - width/2.0f), ((eye_pos.y + 1.0f)/2.0f*(height - 1.0f) - height/2.0f) );
+	ivec2 dist_coord = pos_coord - eye_coord;
 
 	//*1* \/ \/ \/ below id is always same why
 	//like before, copy and paste into new visual studio and try out if it works by value
 	//also for debugging render each variable
 	//somehow always 9, doesn't change
 	//pos_coord is right, but box_coords is not working
-	vec2 id = vec2(N-1, N-1);
-	while(int(id.x) >= 0 && abs(int(pos_coord.x)) < box_coords[int(id.x)])
+	ivec2 id = ivec2(N-1, N-1);
+	while(id.x >= 0 && abs(pos_coord.x) < box_coords[id.x])
 		id.x--;
-	while(int(id.y) >= 0 && abs(int(pos_coord.y)) < box_coords[int(id.y)])
+	while(id.y >= 0 && abs(pos_coord.y) < box_coords[id.y])
 		id.y--;
 
-	vec2 box_coord = vec2( box_coords[int(id.x)], box_coords[int(id.y)] ); //why are box_coord and box_dim different
+	ivec2 box_coord = ivec2( box_coords[id.x], box_coords[id.y] ); //why are box_coord and box_dim different
 	
 	//	0 2 5 14 41, lowerleft id is at value
-	vec2 box_dim;
-	if(int(id.x) > 1)
-		box_dim.x = 3 * (box_coord.x - box_coords[int(id.x) - 1]);
-	else if(int(id.x) == 1)
+	ivec2 box_dim;
+	if(id.x > 1)
+		box_dim.x = 3 * (box_coord.x - box_coords[id.x - 1]);
+	else if(id.x == 1)
 		box_dim.x = box_coords[1] + 1; //this can be adjusted, adjusting box_coords[1] will make center bigger as well
 	else
 		box_dim.x = box_coords[0]; //should always be zero, box_dim should be 0 for center
-	if(int(id.y) > 1)
-		box_dim.y = 3 * (box_coord.y - box_coords[int(id.y) - 1]);
-	else if(int(id.y) == 1)
+	if(id.y > 1)
+		box_dim.y = 3 * (box_coord.y - box_coords[id.y - 1]);
+	else if(id.y == 1)
 		box_dim.y = box_coords[1] + 1; //this can be adjusted, adjusting box_coords[1] will make center bigger as well
 	else
 		box_dim.y = box_coords[0]; //should always be zero, box_dim should be 0 for center
@@ -63,19 +63,19 @@ void main()
 	//%%%%%%%%%%%%
 	//*2*
 	//check all of this
-	vec2 lowerleft_coord;
-	if(abs(int(dist_coord.x)) > 1)
+	ivec2 lowerleft_coord;
+	if(abs(dist_coord.x) > 1)
 	{
 		lowerleft_coord.x = box_coord.x + eye_coord.x;
-		if(int(dist_coord.x) < 0)
+		if(dist_coord.x < 0)
 			lowerleft_coord.x = -(box_dim.x - lowerleft_coord.x); //probably this check
 	}
 	else
 	{
 	//for other values, hardcode conditions (without hardcoding too much that scaling isn't possible)
-		if(abs(int(dist_coord.y)) > 1) //vertical line outside of center
+		if(abs(dist_coord.y) > 1) //vertical line outside of center
 		{
-			lowerleft_coord.x = eye_coord.x - box_dim.x/2.0f + 0.5f;
+			lowerleft_coord.x = eye_coord.x - box_dim.x / 2; //rounding?
 		}
 		else //very center
 		{
@@ -83,17 +83,17 @@ void main()
 		}
 	}
 
-	if(abs(int(dist_coord.y)) > 1)
+	if(abs(dist_coord.y) > 1)
 	{
 		lowerleft_coord.y = box_coord.y + eye_coord.y;
-		if(int(dist_coord.y) < 0)
+		if(dist_coord.y < 0)
 			lowerleft_coord.y = -(box_dim.y - lowerleft_coord.y); //probably this check
 	}
 	else
 	{
-		if(abs(int(dist_coord.x)) > 1) //horizontal line outside of center
+		if(abs(dist_coord.x) > 1) //horizontal line outside of center
 		{
-			lowerleft_coord.y = eye_coord.y - box_dim.y/2.0f + 0.5f;
+			lowerleft_coord.y = eye_coord.y - box_dim.y/2; //rounding + 0.5f?
 		}
 		else //very center
 		{
@@ -133,8 +133,8 @@ void main()
 	//fragColor = vec4((eye_coord.x + width / 2) / (width - 1), (eye_coord.y + height / 2) / (height - 1), 0.0f, 1.0f);
 	//fragColor =  vec4((pos_coord.x + width / 2.0f) / (width - 1.0f), (pos_coord.y + height / 2.0f) / (height - 1), 0.0f, 1.0f);
 
-	//fragColor = vec4(id.xy/9.0f, 0.0f, 1.0f);
-	fragColor = vec4(box_dim.xy/3.0f, 0.0f, 1.0f);
+	fragColor = vec4(id.xy/9.0f, 0.0f, 1.0f);
+	//fragColor = vec4(box_dim.xy/3.0f, 0.0f, 1.0f);
 	
 	//fragColor = vec4(lowerleft_pos.xy, 0.0f, 1.0f);
 	
