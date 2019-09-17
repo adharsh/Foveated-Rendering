@@ -20,7 +20,13 @@ public:
 	void addProgram(const char* shader_path, GLenum type);
 	void compileShader() const;
 
-
+	/*
+		IMPORTANT:
+		Before setting any uniforms, be sure to bind shader.
+		Ex:
+		shader.bind()
+		shader.setUniform1f("width", texture.getWidth());
+	*/
 	void setUniform1f(const GLchar* name, float value) const;
 	void setUniform1fv(const GLchar* name, float* value, int count) const;
 	void setUniform1i(const GLchar* name, int value) const;

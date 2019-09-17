@@ -104,6 +104,16 @@ GLint Shader::getUniformLocation(const GLchar* name) const
 	return glGetUniformLocation(program, name);
 }
 
+
+/*
+IMPORTANT:
+Before setting any uniforms, be sure to bind shader.
+Ex:
+shader.bind()
+shader.setUniform1f("width", texture.getWidth());
+*/
+
+
 void Shader::setUniform1f(const GLchar* name, float value) const
 {
 	glUniform1f(getUniformLocation(name), value);

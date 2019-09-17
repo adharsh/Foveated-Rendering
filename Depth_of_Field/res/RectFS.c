@@ -43,6 +43,8 @@ void main()
 	while(id.y >= 0 && abs(dist_coord.y) < box_coords[id.y])
 		id.y--;
 
+	id = ivec2(max(id.x, id.y));
+
 	ivec2 box_coord = ivec2( box_coords[id.x], box_coords[id.y] ); //why are box_coord and box_dim different
 	
 	//	0 2 5 14 41, lowerleft id is at value
@@ -137,14 +139,5 @@ void main()
 	//fragColor = vec4(box_dim.xy/3.0f, 0.0f, 1.0f);
 	
 	//fragColor = vec4(lowerleft_pos.xy, 0.0f, 1.0f);
-	
-	//fragColor = vec4((float(pos_coord.x) + width / 2.0f) / (width - 1.0f), (float(pos_coord.y) + height / 2.0f) / (height - 1.0f), 0.0f, 1.0f);
-
-	//if (pos_coord != vec2(0, 0))
-	//	fragColor = vec4(0.0f, 0.0f, 1.0f, 0.0f);
-	//else
-	//	fragColor = vec4(1.0f, 0.0f, 0.0f, 0.0f);
-	//pos_coord = vec2((pos_coord.x + width / 2) / (width - 1), (pos_coord.y + height / 2) / (height - 1));
-	 
-	//fragColor = vec4((eye_coord.x + width / 2) / (width - 1), (eye_coord.y + height / 2) / (height - 1), 0.0f, 1.0f);
+	//fragColor = vec4(upperright_pos.xy, 0.0f, 1.0f);
 }

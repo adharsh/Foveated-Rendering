@@ -13,7 +13,8 @@
 int main()
 {
 	int dim = 256;
-	Window win = Window("Depth of Field", 5 * dim, 5 * dim, glm::vec4(0, 1, 1, 0));
+	int scale = 5;
+	Window win = Window("Depth of Field", scale * dim, scale * dim, glm::vec4(0, 1, 1, 0));
 
 	Shader shader = Shader();
 	shader.addVertexShader("res/RectVS.c");
