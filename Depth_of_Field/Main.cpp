@@ -141,6 +141,8 @@ int main()
 	shader.setUniform1iv("box_coords", box_coords, num_boxes);
 	shader.setUniform1f("width", texture.getWidth()); //don't worry about scaling, it's gonna end up as [0,1] anyways
 	shader.setUniform1f("height", texture.getHeight());
+	shader.unbind();
+
 	while (!win.closed())
 	{
 		win.clear();
@@ -156,12 +158,13 @@ int main()
 
 		float x_transformed = (x / ((double)win.getWidth()))*2.0f - 1.0f;
 		float y_transformed = ((((double)win.getHeight()) - y) / ((double)win.getHeight()))*2.0f - 1.0f;
+		//TODO, directly convert to UV coordinates
 		shader.setUniform2f("eye_pos", glm::vec2(x_transformed, y_transformed));
 
 		//glActiveTexture(GL_TEXTURE0);
 		texture.bind();
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-		//texture.unbind();
+		texture.unbind();
 
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
