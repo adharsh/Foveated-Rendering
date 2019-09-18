@@ -12,18 +12,17 @@
 
 int main()
 {
-	int dim = 256;
+	int width, height, num_channels;
+	unsigned char* img = NULL;
+	Texture::load_data("res/sat256.bmp", &img, &width, &height, &num_channels);
+
 	int scale = 5;
-	Window win = Window("Depth of Field", scale * dim, scale * dim, glm::vec4(0, 1, 1, 0));
+	Window win = Window("Depth of Field", scale * width, scale * height, glm::vec4(0, 1, 1, 0));
 
 	Shader shader = Shader();
 	shader.addVertexShader("res/RectVS.c");
 	shader.addFragmentShader("res/RectFS.c");
 	shader.compileShader();
-
-	int width, height, num_channels;
-	unsigned char* img = NULL;
-	Texture::load_data("res/sat256.bmp", &img, &width, &height, &num_channels);
 
 #if 0
 	Texture::load_data("res/lena_256.png", &img, &width, &height, &num_channels);
@@ -47,9 +46,9 @@ int main()
 			/*pixel[0] = (float)(r[tid]) / (float)(255 * 512 * 512) * 255.0;
 			pixel[1] = (float)(g[tid]) / (float)(255 * 512 * 512) * 255.0;
 			pixel[2] = (float)(b[tid]) / (float)(255 * 512 * 512) * 255.0;*/
-			pixel[0] = (float)(r[tid]) / (float)(255 * dim * dim) * 255.0;
-			pixel[1] = (float)(g[tid]) / (float)(255 * dim * dim) * 255.0;
-			pixel[2] = (float)(b[tid]) / (float)(255 * dim * dim) * 255.0;
+			pixel[0] = (float)(r[tid]) / (float)(255 * width * height) * 255.0;
+			pixel[1] = (float)(g[tid]) / (float)(255 * width * height) * 255.0;
+			pixel[2] = (float)(b[tid]) / (float)(255 * width * height) * 255.0;
 		}
 	}
 	

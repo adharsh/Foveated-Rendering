@@ -50,11 +50,11 @@ void main()
 		//id.x == 0; should always be zero, box_dim should be 0 for center
 	int box_dim;
 	if (max_id > 1)
-		box_dim = 3 * (box_coord - box_coords[max_id - 1] + 1);
+		box_dim = 3 * (box_coord - box_coords[max_id - 1]);
 	else
 		box_dim = box_coords[max_id] + 1; 
 
-	vec2 lowerleft_coord;
+	ivec2 lowerleft_coord;
 	if (id.x == id.y)
 	{
 		lowerleft_coord = eye_coord + box_coord;
@@ -67,9 +67,37 @@ void main()
 	}
 	else
 	{
+		//TODO, simplify below into one line if possible
+		if (abs(dist_coord.x) > abs(dist_coord.y))
+		{
+			if (dist_coord.x < 0)
+			{
+				//left
+				lowerleft_coord = ivec2(eye_coord.x - box_coord - box_dim, eye_coord.y - box_dim/2);
+			}
+			else
+			{
+				//right
+				lowerleft_coord = ivec2(eye_coord.x + box_coord, eye_coord.y - box_dim/2);
+			}
+		}
+		else
+		{
+			if (dist_coord.y < 0)
+			{
+				//down
+				lowerleft_coord = ivec2(eye_coord.x - box_coord, eye_coord.y - box_dim/2 - box_dim);
+			}
+			else
+			{
+				//up
+				lowerleft_coord = ivec2(eye_coord.x - box_coord, eye_coord.y + box_dim/2);
+			}
+		}
 
 	}
-
+	lowerleft_coord = pos_coord;
+	box_dim = 1;
 
 	//condense above code^
 	//make sure lowerleft_coord is already int by her
@@ -77,8 +105,8 @@ void main()
 	// x will go completely to the left always, equivalent to the box_coord x val
 	// y will go down as much as it needs to always
 	////should be readjusted to lower left as well as pos [-1,1]
-	/*vec2 lowerleft_pos = vec2( (float(lowerleft_coord.x) + width/2.0f)/(width-1.0f), (float(lowerleft_coord.y) + height/2.0f)/(height-1.0f));
-	vec2 upperright_pos = vec2( (float(lowerleft_coord.x) + box_dim.x + width/2.0f)/(width-1.0f), (float(lowerleft_coord.y) + box_dim.y + height/2.0f)/(height-1.0f));
+	vec2 lowerleft_pos = vec2( (float(lowerleft_coord.x) + width/2.0f)/(width-1.0f), (float(lowerleft_coord.y) + height/2.0f)/(height-1.0f));
+	vec2 upperright_pos = vec2( (float(lowerleft_coord.x) + box_dim + width/2.0f)/(width-1.0f), (float(lowerleft_coord.y) + box_dim + height/2.0f)/(height-1.0f));
 	upperright_pos.x = upperright_pos.x > 1.0f? 1.0f : upperright_pos.x;
 	upperright_pos.y = upperright_pos.y > 1.0f? 1.0f : upperright_pos.y;
 
@@ -91,7 +119,8 @@ void main()
 	//255 * 256 * 256
 	fragColor = texture(texture_sampler, D) - texture(texture_sampler, B) - texture(texture_sampler, C) + texture(texture_sampler, A);
 	fragColor.w = 1;
-	*/
+
+	fragColor *= 2;
 
 	//fragColor = texture(texture_sampler, uv);
 	//if (lower_pos == uv)
@@ -105,8 +134,9 @@ void main()
 	//fragColor =  vec4((pos_coord.x + width / 2.0f) / (width - 1.0f), (pos_coord.y + height / 2.0f) / (height - 1), 0.0f, 1.0f);
 
 	//fragColor = vec4(id.xy/9.0f, 0.0f, 1.0f);
+	//fragColor = vec4(max_id / 9.0f);
 	//fragColor = vec4((box_coord + width / 2.0f) / (width - 1.0f), (box_coord + height / 2.0f) / (height - 1), 0.0f, 1.0f);
-	fragColor = vec4(box_dim/41.0f);
+	//fragColor = vec4(box_dim/41.0f);
 	
 	//fragColor = vec4(lowerleft_pos.xy, 0.0f, 1.0f);
 	//fragColor = vec4(upperright_pos.xy, 0.0f, 1.0f);
@@ -116,6 +146,5 @@ void main()
 	/*if (id.x != id.y)
 		fragColor = vec4(1);
 	else
-		fragColor = vec4(0);
-	*/
+		fragColor = vec4(0);*/
 }
