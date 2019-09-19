@@ -10,6 +10,7 @@ uniform int box_coords[MAX_BOXES];
 uniform int box_dims[MAX_BOXES];
 uniform float width;
 uniform float height;
+uniform int resolution;
 
 layout(std430, binding = 2) buffer SAT_Frame
 {
@@ -35,13 +36,13 @@ void main()
 
 	//like before, copy and paste into new visual studio and try out if it works by value
 	//also for debugging render each variable
-	ivec2 id = ivec2(MAX_BOXES - 1, MAX_BOXES - 1);
-	while (id.x >= 0 && abs(dist_coord.x) < box_coords[id.x])
-		id.x--;
-	while (id.y >= 0 && abs(dist_coord.y) < box_coords[id.y])
-		id.y--;
-	//dist_coord >= box_coords, shows the least value (used for 
-
+	ivec2 id = ivec2(0, 0);
+	while (id.x < MAX_BOXES && box_coords[id.x] <= abs(dist_coord.x))
+		id.x++;
+	while (id.y < MAX_BOXES && box_coords[id.y] <= abs(dist_coord.y))
+		id.y++;
+	id -= 1;
+	
 	int max_id = max(id.x, id.y);
 	int box_coord = box_coords[max_id];
 	int box_dim = box_dims[max_id];
@@ -90,9 +91,7 @@ void main()
 	}
 
 	if (box_dim == 1)
-	{
 		lowerleft_coord = pos_coord;
-	}
 
 	//lowerleft_coord = pos_coord;
 	//box_dim = 1;

@@ -128,9 +128,9 @@ int main()
 	//int num_boxes = (int)(std::log(std::max(width, height)) / std::log(3));	
 
 	int k = 1;
-	int box_dims[MAX_BOXES] = { 1, 1, 1, 3, 9, 27, 81, 243, 729, 2187}; //{1, 3, 9, 27, 81, 243, 729, 2187, 6561, 19683}
+	int box_dims[MAX_BOXES] = { 1, 1, 1, 3, 9, 27, 81, 243, 729, 2187 }; // { 1, 3, 9, 27, 81, 243, 729, 2187, 6561, 19683 };
 	int box_coords[MAX_BOXES] = { 0, 2, 5, 14, 41, 122, 365, 1094, 3281, 9842 };
-	
+	int resolution = 3;
 	 
 	//for (int i = 0; i < k; i++)
 	//	box_dims[i] = 1;
@@ -205,6 +205,7 @@ int main()
 	shader.setUniform1iv("box_dims", box_dims, MAX_BOXES);
 	shader.setUniform1f("width", width); //don't worry about scaling, it's gonna end up as [0,1] anyways
 	shader.setUniform1f("height", height);
+	shader.setUniform1i("resolution", resolution);
 
 	//TODO: make this oop and encapsulated
 	GLuint ssbo;
