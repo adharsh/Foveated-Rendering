@@ -8,9 +8,10 @@
 class Shader
 {
 private:
-	GLuint program;
+	
 	std::vector<GLuint> shaders;
 public:
+	GLuint program;
 	Shader();
 	~Shader();
 

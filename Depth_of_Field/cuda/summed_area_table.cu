@@ -87,13 +87,13 @@ void print(size_t m, size_t n, thrust::device_vector<T>& d_data)
 	}
 }
 
-void summed_area_table(unsigned int* data, unsigned int N)
+void summed_area_table(float* data, unsigned int N)
 {
-	unsigned int* dev_data;
-	cudaMalloc((void **)&dev_data, N * N * sizeof(int));
-	cudaMemcpy(dev_data, data, N * N * sizeof(int), cudaMemcpyHostToDevice);
-	thrust::device_ptr<unsigned int> dev_ptr = thrust::device_pointer_cast(dev_data);
-	thrust::device_vector<unsigned int> img(dev_ptr, dev_ptr + N * N);
+	float* dev_data;
+	cudaMalloc((void **)&dev_data, N * N * sizeof(float));
+	cudaMemcpy(dev_data, data, N * N * sizeof(float), cudaMemcpyHostToDevice);
+	thrust::device_ptr<float> dev_ptr = thrust::device_pointer_cast(dev_data);
+	thrust::device_vector<float> img(dev_ptr, dev_ptr + N * N);
 
 	//std::cout << "[step 0] initial array" << std::endl;
 	//print(N, N, img);
@@ -103,7 +103,7 @@ void summed_area_table(unsigned int* data, unsigned int N)
 	//print(N, N, img);
 
 	//std::cout << "[step 2] transpose array" << std::endl;
-	thrust::device_vector<unsigned int> temp(N * N);
+	thrust::device_vector<float> temp(N * N);
 	transpose(N, N, img, temp);
 	//print(N, N, temp);
 

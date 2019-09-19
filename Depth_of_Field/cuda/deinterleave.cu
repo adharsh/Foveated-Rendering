@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include "summed_area_table.cuh"
 
-__global__ void deinterleave_kernel(unsigned char* image, unsigned int NxN, unsigned int* r, unsigned int* g, unsigned int* b) 
+__global__ void deinterleave_kernel(unsigned char* image, unsigned int NxN, float* r, float* g, float* b) 
 {
 	int tid = threadIdx.x + blockIdx.x * blockDim.x;
 	while (tid < NxN) {
@@ -21,7 +21,7 @@ __global__ void deinterleave_kernel(unsigned char* image, unsigned int NxN, unsi
 	}
 }
 
-void deinterleave(unsigned char* image, unsigned int NxN, unsigned int** r, unsigned int** g, unsigned int** b) 
+void deinterleave(unsigned char* image, unsigned int NxN, float** r, float** g, float** b)
 {
 	
 	//input: img
@@ -30,18 +30,18 @@ void deinterleave(unsigned char* image, unsigned int NxN, unsigned int** r, unsi
 	unsigned char* dev_img;
 	cudaMalloc((void**)&dev_img, 3 * NxN * sizeof(char));
 
-	unsigned int* dev_r, *dev_g, *dev_b;
-	cudaMalloc((void**)&dev_r, NxN * sizeof(int));
-	cudaMalloc((void**)&dev_g, NxN * sizeof(int));
-	cudaMalloc((void**)&dev_b, NxN * sizeof(int));
+	float* dev_r, *dev_g, *dev_b;
+	cudaMalloc((void**)&dev_r, NxN * sizeof(float));
+	cudaMalloc((void**)&dev_g, NxN * sizeof(float));
+	cudaMalloc((void**)&dev_b, NxN * sizeof(float));
 	
 	cudaMemcpy(dev_img, image, 3 * NxN * sizeof(char), cudaMemcpyHostToDevice);
 
 	deinterleave_kernel << <512, 512>> > (dev_img, NxN, dev_r, dev_g, dev_b);
 	
-	cudaMemcpy(*r, dev_r, NxN * sizeof(int), cudaMemcpyDeviceToHost);
-	cudaMemcpy(*g, dev_g, NxN * sizeof(int), cudaMemcpyDeviceToHost);
-	cudaMemcpy(*b, dev_b, NxN * sizeof(int), cudaMemcpyDeviceToHost);
+	cudaMemcpy(*r, dev_r, NxN * sizeof(float), cudaMemcpyDeviceToHost);
+	cudaMemcpy(*g, dev_g, NxN * sizeof(float), cudaMemcpyDeviceToHost);
+	cudaMemcpy(*b, dev_b, NxN * sizeof(float), cudaMemcpyDeviceToHost);
 	
 	/*for (int i = 0; i < 4; i++)
 	{

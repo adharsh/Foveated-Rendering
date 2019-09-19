@@ -1,2 +1,1 @@
-
-void deinterleave(unsigned char* in_image, unsigned int NxN, unsigned int** out_r, unsigned int** out_g, unsigned int** out_b);
+void deinterleave(unsigned char* in_image, unsigned int NxN, float** out_r, float** out_g, float** out_b);

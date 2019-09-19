@@ -32,7 +32,9 @@
     <Text Include="Resources.txt" />
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="cuda\deinterleave.cu" />
+    <CudaCompile Include="cuda\deinterleave.cu">
+      <FileType>Document</FileType>
+    </CudaCompile>
     <CudaCompile Include="cuda\summed_area_table.cu" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

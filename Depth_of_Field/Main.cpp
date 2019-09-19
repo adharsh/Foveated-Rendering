@@ -8,14 +8,22 @@
 #include <fstream>
 #include <iostream>
 
-//	0 2 5 14 41
+
+//ASSUMPTIONS: 
+//input is square image
+//Minimum max resolution is 2048 resolution (gaurenteed to work up to at most 2048x2048 image
+	//https://stackoverflow.com/questions/7954927/passing-a-list-of-values-to-fragment-shader
+//MAX_BOXES = 10
+//other shader constants
+
+
+#define gen 0
 
 int main()
 {
+#if !gen
 	int width, height, num_channels;
-	unsigned char* img = NULL;
-	Texture::load_data("res/sat256.bmp", &img, &width, &height, &num_channels);
-
+	width = height = 256; num_channels = 3;
 	int scale = 5;
 	Window win = Window("Depth of Field", scale * width, scale * height, glm::vec4(0, 1, 1, 0));
 
@@ -23,60 +31,87 @@ int main()
 	shader.addVertexShader("res/RectVS.c");
 	shader.addFragmentShader("res/RectFS.c");
 	shader.compileShader();
+	
+	std::vector<float> frame(3 * width * height);
+	FILE* fp;
+	fp = fopen("res/lena_256.planar", "rb");
+	fread(&frame[0], sizeof(float), 3 * width * height, fp);
+	fclose(fp);
+	
+	/*std::ofstream f;
+	f.open("res/sat_frame_test.csv");
+	int c = 0;
+	for (int c = 0; c < width; c++)
+	{
+		for (int ro = 0; ro < height; ro++)
+		{
+			int i = width * ro + c;
+			f << "(" << frame[i] << ":" << frame[i + width*height] << ":" << frame[i + 2 * width * height] << "),";
+		}
+		f << "\n";
+	}	
+	f.close();*/
 
-#if 0
+#else
+	int width, height, num_channels;
+	unsigned char* img = NULL;
 	Texture::load_data("res/lena_256.png", &img, &width, &height, &num_channels);
+	int scale = 5;
+	Window win = Window("Depth of Field", scale * width, scale * height, glm::vec4(0, 1, 1, 0));
+
 	unsigned int N = width;
-	//TODO: why malloc
-	unsigned int* r = (unsigned int*)malloc(N * N * sizeof(int));
-	unsigned int* g = (unsigned int*)malloc(N * N * sizeof(int));
-	unsigned int* b = (unsigned int*)malloc(N * N * sizeof(int));
+	//N is dynamic so malloc is needed (or vector)
+	float* r = (float*)malloc(N * N * sizeof(float));
+	float* g = (float*)malloc(N * N * sizeof(float));
+	float* b = (float*)malloc(N * N * sizeof(float));
 
 	deinterleave(img, N * N, &r, &g, &b);
 	summed_area_table(r, N);
 	summed_area_table(g, N);
 	summed_area_table(b, N);
 
-	for (int i = 0; i < width; i++)
-	{
-		for (int j = 0; j < height; j++)
-		{
-			unsigned int tid = i * width + j;
-			unsigned char* pixel = img + tid * num_channels;
-			/*pixel[0] = (float)(r[tid]) / (float)(255 * 512 * 512) * 255.0;
-			pixel[1] = (float)(g[tid]) / (float)(255 * 512 * 512) * 255.0;
-			pixel[2] = (float)(b[tid]) / (float)(255 * 512 * 512) * 255.0;*/
-			pixel[0] = (float)(r[tid]) / (float)(255 * width * height) * 255.0;
-			pixel[1] = (float)(g[tid]) / (float)(255 * width * height) * 255.0;
-			pixel[2] = (float)(b[tid]) / (float)(255 * width * height) * 255.0;
-		}
-	}
+	FILE* fp;
+	fp = fopen("res/lena_256.planar", "wb");
+	fwrite(r, sizeof(float), width * height, fp);
+	fwrite(g, sizeof(float), width * height, fp);
+	fwrite(b, sizeof(float), width * height, fp);
+	fclose(fp);
 	
+	/*std::ofstream f;
+	f.open("res/sat_frame.csv");
+	int c = 0;
+	for (int c = 0; c < width; c++)
+	{
+		for (int ro = 0; ro < height; ro++)
+		{
+			int i = width * ro + c;
+			f << "(" << r[i] << ":" << g[i] << ":" << b[i] << "),";
+		}
+		f << "\n";
+	}	
+	f.close();*/
+
 	free(r);
 	free(g);
 	free(b);
+	
+	system("pause");
 
-	std::ofstream myfile;
-	myfile.open("res/or_sat256.csv");
+	std::vector<float> frame(3 * width * height);
+	for (int i = 0; i < width * height; i++)
+		frame[i] = r[i];
 
-	for (int r = height - 1; r >= 0; r--)
-	{
-		for (int c = 0; c < width; c++)
-		{
-			unsigned char* pix = img + (c + r * width) * num_channels;
+	for (int i = 0; i < width * height; i++)
+		frame[i + width * height] = g[i];
 
-			myfile << "(";
-			for (int i = 0; i < num_channels; i++)
-				myfile << (int)pix[i] << ":";
-			myfile << "),";
-		}
-		myfile << "\n";
-	}
-	myfile.close();
+	for (int i = 0; i < width * height; i++)
+		frame[i + 2 * width * height] = b[i];
+
+	Shader shader = Shader();
+	shader.addVertexShader("res/RectVS.c");
+	shader.addFragmentShader("res/RectFS.c");
+	shader.compileShader();
 #endif
-
-	Texture texture = Texture(img, width, height, num_channels);
-	//texture.write_to_bmp("res/sat256.bmp");
 
 	//id - 1 -> lower-left rect coord val
 	//-1 -> can't use, the same val
@@ -138,8 +173,17 @@ int main()
 	//only have to do once, not too slow since only once
 	shader.bind();
 	shader.setUniform1iv("box_coords", box_coords, num_boxes);
-	shader.setUniform1f("width", texture.getWidth()); //don't worry about scaling, it's gonna end up as [0,1] anyways
-	shader.setUniform1f("height", texture.getHeight());
+	shader.setUniform1f("width", width); //don't worry about scaling, it's gonna end up as [0,1] anyways
+	shader.setUniform1f("height", height);
+
+	//TODO: make this oop and encapsulated
+	GLuint ssbo;
+	glGenBuffers(1, &ssbo);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, 3 * width * height * sizeof(float), &frame[0], GL_STATIC_DRAW);
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, ssbo);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
 	shader.unbind();
 
 	while (!win.closed())
@@ -161,9 +205,7 @@ int main()
 		shader.setUniform2f("eye_pos", glm::vec2(x_transformed, y_transformed));
 
 		//glActiveTexture(GL_TEXTURE0);
-		texture.bind();
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-		texture.unbind();
 
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
