@@ -114,33 +114,51 @@ int main()
 	shader.compileShader();
 #endif
 
-	//id - 1 -> lower-left rect coord val
-	//-1 -> can't use, the same val
-	//0 -> 3, can't use (base case)
-	//1 -> 6, box_dim = (array[1] - array[0])*3
-	//etc.
-	//int num_boxes = (int)(std::log(std::max(width, height)) / std::log(3));
-	int box_coords[MAX_BOXES] = { 0, 0, 0, 0, 0 };
-	box_coords[0] = 0; //0
-	box_coords[1] = 2; //2
-	std::cout << box_coords[0] << " " << box_coords[1] << " ";
-	int prev = 2;
-	for (unsigned int i = 2; i < MAX_BOXES; i++)
-	{
-      //box_coords[i] = box_coords[i - 1] + std::pow(3, i - 1);
-		box_coords[i] = prev + std::pow(3, i - 1);
-		prev = box_coords[i];
-		std::cout << box_coords[i] << " ";
-	}
-	std::cout << std::endl;
+	/*
+	maybe change id to make it more convenient
+	what is the ideal, what is needed
+		generalize the paper, for any increase in resolution or decrease
+
+	*/
+
+
+	//Below values give somewhat of an effect
+	//{1, 1, 1, 3, 9, 27, 81, 243, 729, 2187}
+	//{ 0, 2, 5, 14, 41, 122, 365, 1094, 3281, 9842}
+	//int num_boxes = (int)(std::log(std::max(width, height)) / std::log(3));	
+
+	int k = 1;
+	int box_dims[MAX_BOXES] = { 1, 1, 1, 3, 9, 27, 81, 243, 729, 2187}; //{1, 3, 9, 27, 81, 243, 729, 2187, 6561, 19683}
+	int box_coords[MAX_BOXES] = { 0, 2, 5, 14, 41, 122, 365, 1094, 3281, 9842 };
 	
-	int box_dims[MAX_BOXES] = {1, 1, 1, 1, 1};
-	for (unsigned int i = 3; i < MAX_BOXES; i++)
-	{
-		box_dims[i] = std::pow(3, i);
-		std::cout << box_dims[i] << " ";
-	}
-	std::cout << std::endl;
+	 
+	//for (int i = 0; i < k; i++)
+	//	box_dims[i] = 1;
+	//int c = 1;
+	//for (unsigned int i = k; i < MAX_BOXES; i++)
+	//	box_dims[i] = std::pow(3, c++);
+
+	//for (int i = 0; i < k; i++)
+	//	box_coords[i] = 0;
+	//box_coords[k++] = 2;
+	//c = 1;
+	////	0 2 5 14 41
+	//for (unsigned int i = k; i < MAX_BOXES; i++)
+	//	box_coords[i] = box_coords[i - 1] + std::pow(3, c++);
+
+	
+
+
+
+
+
+	for (int i = 0; i < 10; i++)
+		std::cout << box_coords[i] << ", ";
+	std::cout << "\n";
+
+	for (int i = 0; i < 10; i++)
+		std::cout << box_dims[i] << ", ";
+	std::cout << "\n";
 
 	std::vector<GLfloat> data = 
 	{

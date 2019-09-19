@@ -98,7 +98,6 @@ void main()
 	//box_dim = 1;
 
 	//todo: condense above code
-	//todo: 1) reconvert below into coordinates for frame
 
 	//zero indexed
 	ivec2 lowerleft_idx = ivec2(lowerleft_coord.x + width / 2, lowerleft_coord.y + height / 2);
@@ -135,7 +134,7 @@ void main()
 	//fragColor = vec4((box_coord + width / 2.0f) / (width - 1.0f), (box_coord + height / 2.0f) / (height - 1), 0.0f, 1.0f);
 	//fragColor = vec4(box_dim/41.0f);
 	
-	fragColor = vec4((lowerleft_coord.x + width / 2.0f) / (width - 1.0f), (lowerleft_coord.y + height / 2.0f) / (height - 1), 0.0f, 1.0f);
+	//fragColor = vec4((lowerleft_coord.x + width / 2.0f) / (width - 1.0f), (lowerleft_coord.y + height / 2.0f) / (height - 1), 0.0f, 1.0f);
 	//fragColor = vec4((upperright_coord.x + width / 2.0f) / (width - 1.0f), (upperright_coord.y + height / 2.0f) / (height - 1), 0.0f, 1.0f);
 
 	
