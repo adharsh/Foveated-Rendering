@@ -8,6 +8,7 @@
 #include <fstream>
 #include <iostream>
 
+#define MAX_BOXES 10
 
 //ASSUMPTIONS: 
 //input is square image
@@ -119,18 +120,28 @@ int main()
 	//1 -> 6, box_dim = (array[1] - array[0])*3
 	//etc.
 	//int num_boxes = (int)(std::log(std::max(width, height)) / std::log(3));
-	int num_boxes = 10;
-	int* box_coords = new int[num_boxes];
-	box_coords[0] = 0;
-	box_coords[1] = 2;
-	std::cout << "0 2 ";
-	for (unsigned int i = 2; i < num_boxes; i++)
+	int box_coords[MAX_BOXES] = { 0, 0, 0, 0, 0 };
+	box_coords[0] = 0; //0
+	box_coords[1] = 2; //2
+	std::cout << box_coords[0] << " " << box_coords[1] << " ";
+	int prev = 2;
+	for (unsigned int i = 2; i < MAX_BOXES; i++)
 	{
-		box_coords[i] = box_coords[i - 1] + std::pow(3, i - 1);
+      //box_coords[i] = box_coords[i - 1] + std::pow(3, i - 1);
+		box_coords[i] = prev + std::pow(3, i - 1);
+		prev = box_coords[i];
 		std::cout << box_coords[i] << " ";
 	}
 	std::cout << std::endl;
 	
+	int box_dims[MAX_BOXES] = {1, 1, 1, 1, 1};
+	for (unsigned int i = 3; i < MAX_BOXES; i++)
+	{
+		box_dims[i] = std::pow(3, i);
+		std::cout << box_dims[i] << " ";
+	}
+	std::cout << std::endl;
+
 	std::vector<GLfloat> data = 
 	{
 		//Positions		UVs
@@ -172,7 +183,8 @@ int main()
 	//box_coords = new int[num_boxes];
 	//only have to do once, not too slow since only once
 	shader.bind();
-	shader.setUniform1iv("box_coords", box_coords, num_boxes);
+	shader.setUniform1iv("box_coords", box_coords, MAX_BOXES);
+	shader.setUniform1iv("box_dims", box_dims, MAX_BOXES);
 	shader.setUniform1f("width", width); //don't worry about scaling, it's gonna end up as [0,1] anyways
 	shader.setUniform1f("height", height);
 

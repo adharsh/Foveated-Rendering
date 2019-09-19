@@ -7,6 +7,7 @@ out vec4 fragColor;
 
 uniform vec2 eye_pos; //[-1,1]
 uniform int box_coords[MAX_BOXES];
+uniform int box_dims[MAX_BOXES];
 uniform float width;
 uniform float height;
 
@@ -43,15 +44,7 @@ void main()
 
 	int max_id = max(id.x, id.y);
 	int box_coord = box_coords[max_id];
-
-	//	0 2 5 14 41, lowerleft id is at value
-	//id.x == 1; this can be adjusted, adjusting box_coords[1] will make center bigger as well
-		//id.x == 0; should always be zero, box_dim should be 0 for center
-	int box_dim;
-	if (max_id > 1)
-		box_dim = 3 * (box_coord - box_coords[max_id - 1]);
-	else
-		box_dim = box_coords[max_id] + 1;
+	int box_dim = box_dims[max_id];
 
 	ivec2 lowerleft_coord;
 	if (id.x == id.y)
@@ -95,8 +88,14 @@ void main()
 		}
 
 	}
-	lowerleft_coord = pos_coord;
-	box_dim = 1;
+
+	if (box_dim == 1)
+	{
+		lowerleft_coord = pos_coord;
+	}
+
+	//lowerleft_coord = pos_coord;
+	//box_dim = 1;
 
 	//todo: condense above code
 	//todo: 1) reconvert below into coordinates for frame
@@ -136,13 +135,14 @@ void main()
 	//fragColor = vec4((box_coord + width / 2.0f) / (width - 1.0f), (box_coord + height / 2.0f) / (height - 1), 0.0f, 1.0f);
 	//fragColor = vec4(box_dim/41.0f);
 	
-	//fragColor = vec4(lowerleft_pos.xy, 0.0f, 1.0f);
-	//fragColor = vec4(upperright_pos.xy, 0.0f, 1.0f);
+	fragColor = vec4((lowerleft_coord.x + width / 2.0f) / (width - 1.0f), (lowerleft_coord.y + height / 2.0f) / (height - 1), 0.0f, 1.0f);
+	//fragColor = vec4((upperright_coord.x + width / 2.0f) / (width - 1.0f), (upperright_coord.y + height / 2.0f) / (height - 1), 0.0f, 1.0f);
 
 	
 	//Good one for demo purposes
 	/*if (id.x != id.y)
 		fragColor = vec4(1);
 	else
-		fragColor = vec4(0);*/
+		fragColor = vec4(0);
+	*/
 }
