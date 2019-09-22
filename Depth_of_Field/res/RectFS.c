@@ -141,13 +141,26 @@ void main()
 	//lowerleft_coord = pos_coord;
 	//box_dim = 1;
 
+#if 1
 	ivec2 lowerleft_idx = ivec2(lowerleft_coord.x + width / 2, lowerleft_coord.y + height / 2);
-	ivec2 upperright_idx = ivec2(lowerleft_coord.x + box_dim + width / 2, lowerleft_coord.y + box_dim + height / 2);	
+	lowerleft_idx.x = lowerleft_idx.x < 0 ? 0 : lowerleft_idx.x;
+	lowerleft_idx.y = lowerleft_idx.y < 0 ? 0 : lowerleft_idx.y;
+	//lowerleft_idx.x = lowerleft_idx.x >= width ? int(width) - 1 : lowerleft_idx.x;
+	//lowerleft_idx.y = lowerleft_idx.y >= height ? int(height) - 1 : lowerleft_idx.y;
+
+	ivec2 upperright_idx = ivec2(lowerleft_coord.x + box_dim + width / 2, lowerleft_coord.y + box_dim + height / 2);
+	//upperright_idx.x = upperright_idx.x < 0 ? 0 : upperright_idx.x;
+	//upperright_idx.y = upperright_idx.y < 0 ? 0 : upperright_idx.y;
+	upperright_idx.x = upperright_idx.x >= width ? int(width) - 1 : upperright_idx.x;
+	upperright_idx.y = upperright_idx.y >= height ? int(height) - 1 : upperright_idx.y;
+#else
+	ivec2 lowerleft_idx = ivec2(lowerleft_coord.x + width / 2, lowerleft_coord.y + height / 2);
+	ivec2 upperright_idx = ivec2(lowerleft_coord.x + box_dim + width / 2, lowerleft_coord.y + box_dim + height / 2);
 	lowerleft_idx.x = lowerleft_idx.x < 0 ? 0 : lowerleft_idx.x;
 	lowerleft_idx.y = lowerleft_idx.y < 0 ? 0 : lowerleft_idx.y;
 	upperright_idx.x = upperright_idx.x >= width ? int(width) - 1 : upperright_idx.x;
 	upperright_idx.y = upperright_idx.y >= height ? int(height) - 1 : upperright_idx.y;
-
+#endif
 
 	//A < D
 	int A = lowerleft_idx.x + int(width) * lowerleft_idx.y;
