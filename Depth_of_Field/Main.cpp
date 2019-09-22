@@ -16,6 +16,7 @@
 	//https://stackoverflow.com/questions/7954927/passing-a-list-of-values-to-fragment-shader
 //MAX_BOXES = 10
 //other shader constants
+//resolution >= 1
 
 
 #define gen 0
@@ -121,15 +122,15 @@ int main()
 
 	*/
 
-
 	//Below values give somewhat of an effect
 	//{1, 1, 1, 3, 9, 27, 81, 243, 729, 2187}
 	//{ 0, 2, 5, 14, 41, 122, 365, 1094, 3281, 9842}
 	//int num_boxes = (int)(std::log(std::max(width, height)) / std::log(3));	
 
 	int k = 1;
-	int box_dims[MAX_BOXES] = { 1, 1, 1, 3, 9, 27, 81, 243, 729, 2187 }; // { 1, 3, 9, 27, 81, 243, 729, 2187, 6561, 19683 };
+	int box_dims[MAX_BOXES] = { 1, 3, 9, 27, 81, 243, 729, 2187, 6561, 19683 };
 	int box_coords[MAX_BOXES] = { 0, 2, 5, 14, 41, 122, 365, 1094, 3281, 9842 };
+	//Todo: box_coords is just box_dim/2 - 1, don't send in another array of ints
 	int resolution = 3;
 	 
 	//for (int i = 0; i < k; i++)
@@ -147,7 +148,6 @@ int main()
 	//	box_coords[i] = box_coords[i - 1] + std::pow(3, c++);
 
 	
-
 
 
 
@@ -203,7 +203,7 @@ int main()
 	shader.bind();
 	shader.setUniform1iv("box_coords", box_coords, MAX_BOXES);
 	shader.setUniform1iv("box_dims", box_dims, MAX_BOXES);
-	shader.setUniform1f("width", width); //don't worry about scaling, it's gonna end up as [0,1] anyways
+	shader.setUniform1f("width", width);
 	shader.setUniform1f("height", height);
 	shader.setUniform1i("resolution", resolution);
 
