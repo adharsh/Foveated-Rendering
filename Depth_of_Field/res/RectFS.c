@@ -55,8 +55,7 @@ void main()
 		}
 		else 
 //#endif
-		//if (id.x == id.y) //corners
-		if(abs(dist_coord.x) > box_coord && abs(dist_coord.y) > box_coord)
+		if(abs(dist_coord.x) > box_coord && abs(dist_coord.y) > box_coord) //corners
 		{
 			fragColor = vec4(0, 1, 0, 1);
 			//fragColor = vec4(1);
@@ -142,9 +141,13 @@ void main()
 	//box_dim = 1;
 
 	ivec2 lowerleft_idx = ivec2(lowerleft_coord.x + width / 2, lowerleft_coord.y + height / 2);
-	ivec2 upperright_idx = ivec2(lowerleft_coord.x + box_dim + width / 2, lowerleft_coord.y + box_dim + height / 2);
+	ivec2 upperright_idx = ivec2(lowerleft_coord.x + box_dim + width / 2, lowerleft_coord.y + box_dim + height / 2);	
+	lowerleft_idx.x = lowerleft_idx.x < 0 ? 0 : lowerleft_idx.x;
+	lowerleft_idx.y = lowerleft_idx.y < 0 ? 0 : lowerleft_idx.y;
 	upperright_idx.x = upperright_idx.x >= width ? int(width) - 1 : upperright_idx.x;
 	upperright_idx.y = upperright_idx.y >= height ? int(height) - 1 : upperright_idx.y;
+
+
 
 	//A < D
 	int A = lowerleft_idx.x + int(width) * lowerleft_idx.y;
@@ -157,8 +160,8 @@ void main()
 		frame[D + int(width) * int(height)] - frame[C + int(width) * int(height)] - frame[B + int(width) * int(height)] + frame[A + int(width) * int(height)],
 		frame[D + 2 * int(width) * int(height)] - frame[C + 2 * int(width) * int(height)] - frame[B + 2 * int(width) * int(height)] + frame[A + 2 * int(width) * int(height)]
 		);
-	fragColor = normalize(vec4(fragColor_tmp.xyz, 1));
-	//fragColor = vec4(normalize(fragColor_tmp).xyz, 1);
+	//fragColor = normalize(vec4(fragColor_tmp.xyz, 1));
+	fragColor = vec4(normalize(fragColor_tmp).xyz, 1);
 	//fragColor = vec4(fragColor_tmp.xyz/255, 1);
 	
 	//fragColor = vec4((lowerleft_coord.x + width / 2.0f) / (width - 1.0f), (lowerleft_coord.y + height / 2.0f) / (height - 1), 0.0f, 1.0f);
