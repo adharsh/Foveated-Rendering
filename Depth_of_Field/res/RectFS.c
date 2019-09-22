@@ -11,7 +11,7 @@ uniform int box_dims[MAX_BOXES];
 uniform float width;
 uniform float height;
 //uniform int resolution;
-#define resolution 2
+#define resolution 4
 
 #define RECURS 0
 
@@ -47,7 +47,6 @@ void main()
 	//#if RECURS
 	while (recurs > 0 && box_dim > 0 && max_id >= 0)
 	{
-		//if(id == ivec2(0, 0))
 		if(abs(dist_coord.x) < box_coord && abs(dist_coord.y) < box_coord) //center
 		{
 			lowerleft_coord = eye_coord - box_dim/2;
@@ -56,23 +55,24 @@ void main()
 		}
 		else 
 //#endif
-		if (id.x == id.y) //corners
+		//if (id.x == id.y) //corners
+		if(abs(dist_coord.x) > box_coord && abs(dist_coord.y) > box_coord)
 		{
 			fragColor = vec4(0, 1, 0, 1);
 			//fragColor = vec4(1);
 			lowerleft_coord = eye_coord + box_coord; //top right
 
-			if (dist_coord.x > 0 && dist_coord.y > 0) //top right
+			if (dist_coord.x > box_coord && dist_coord.y > box_coord) //top right
 			{
 				fragColor = vec4(0, 0.2, 0, 1);
 			}
-			else if (dist_coord.x < 0 && dist_coord.y < 0) //bottom left
+			else if (dist_coord.x < -box_coord  && dist_coord.y < -box_coord) //bottom left
 			{
 				lowerleft_coord.x = (box_coord + box_dim) * -1 + eye_coord.x; 
 				lowerleft_coord.y = (box_coord + box_dim) * -1 + eye_coord.y;
 				fragColor = vec4(0, 0.6, 0, 1);
 			}
-			else if (dist_coord.x < 0 && dist_coord.y > 0) //top left
+			else if (dist_coord.x < -box_coord  && dist_coord.y > box_coord) //top left
 			{
 				lowerleft_coord.x = (box_coord + box_dim) * -1 + eye_coord.x;
 				fragColor = vec4(0, 0.4, 0, 1);
@@ -86,16 +86,16 @@ void main()
 		}
 		else
 		{
-			
 			//TODO, simplify below into one line if possible
+			//split into more explicit cases without using abs
 			if (abs(dist_coord.x) > abs(dist_coord.y))
 			{
-				if (dist_coord.x < 0) //left
+				if (dist_coord.x < -box_coord) //left
 				{
 					lowerleft_coord = ivec2(eye_coord.x - box_coord - box_dim, eye_coord.y - box_dim / 2);
 					fragColor = vec4(0, 0, 0.2, 1);
 				}
-				else //right
+				else//right
 				{
 					lowerleft_coord = ivec2(eye_coord.x + box_coord, eye_coord.y - box_dim / 2);
 					fragColor = vec4(0, 0, 0.4, 1);
@@ -104,7 +104,7 @@ void main()
 			}
 			else
 			{
-				if (dist_coord.y < 0) //bottom
+				if (dist_coord.y < -box_coord) //bottom
 				{
 					lowerleft_coord = ivec2(eye_coord.x - box_dim / 2, eye_coord.y - box_coord - box_dim);
 					fragColor = vec4(0, 0, 0.6, 1);
@@ -152,14 +152,15 @@ void main()
 	int C = lowerleft_idx.x + int(width) * upperright_idx.y;
 	int D = upperright_idx.x + int(width) * upperright_idx.y;
 
-	/*
+	
 	vec3 fragColor_tmp = vec3(frame[D] - frame[C] - frame[B] + frame[A],
 		frame[D + int(width) * int(height)] - frame[C + int(width) * int(height)] - frame[B + int(width) * int(height)] + frame[A + int(width) * int(height)],
 		frame[D + 2 * int(width) * int(height)] - frame[C + 2 * int(width) * int(height)] - frame[B + 2 * int(width) * int(height)] + frame[A + 2 * int(width) * int(height)]
 		);
+	fragColor = normalize(vec4(fragColor_tmp.xyz, 1));
 	//fragColor = vec4(normalize(fragColor_tmp).xyz, 1);
-	fragColor = vec4(fragColor_tmp.xyz/255, 1);
+	//fragColor = vec4(fragColor_tmp.xyz/255, 1);
 	
-	fragColor = vec4((lowerleft_coord.x + width / 2.0f) / (width - 1.0f), (lowerleft_coord.y + height / 2.0f) / (height - 1), 0.0f, 1.0f);
-	*/
+	//fragColor = vec4((lowerleft_coord.x + width / 2.0f) / (width - 1.0f), (lowerleft_coord.y + height / 2.0f) / (height - 1), 0.0f, 1.0f);
+	
 }
