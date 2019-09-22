@@ -136,7 +136,8 @@ void main()
 		lowerleft_coord = pos_coord;
 		box_dim = 1;
 	}
-
+	
+	//todo: to toggle foveated_rendering on/off
 	//lowerleft_coord = pos_coord;
 	//box_dim = 1;
 
@@ -160,6 +161,10 @@ void main()
 		frame[D + 2 * int(width) * int(height)] - frame[C + 2 * int(width) * int(height)] - frame[B + 2 * int(width) * int(height)] + frame[A + 2 * int(width) * int(height)]
 		);
 	fragColor = vec4(normalize(fragColor_tmp.xyz), 1);
+
+	//fragColor = vec4((fragColor_tmp.xyz) / 255, 1);
+	
+	
 	
 	//int max_color = int(max(max(fragColor_tmp.x, fragColor_tmp.y), fragColor_tmp.z));
 	//fragColor = vec4(fragColor_tmp.xyz / max_color, 1);
