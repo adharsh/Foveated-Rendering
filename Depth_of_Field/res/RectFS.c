@@ -148,22 +148,33 @@ void main()
 	upperright_idx.y = upperright_idx.y >= height ? int(height) - 1 : upperright_idx.y;
 
 
-
 	//A < D
 	int A = lowerleft_idx.x + int(width) * lowerleft_idx.y;
 	int B = upperright_idx.x + int(width) * lowerleft_idx.y;
 	int C = lowerleft_idx.x + int(width) * upperright_idx.y;
 	int D = upperright_idx.x + int(width) * upperright_idx.y;
 
-	
+#if 1
 	vec3 fragColor_tmp = vec3(frame[D] - frame[C] - frame[B] + frame[A],
 		frame[D + int(width) * int(height)] - frame[C + int(width) * int(height)] - frame[B + int(width) * int(height)] + frame[A + int(width) * int(height)],
 		frame[D + 2 * int(width) * int(height)] - frame[C + 2 * int(width) * int(height)] - frame[B + 2 * int(width) * int(height)] + frame[A + 2 * int(width) * int(height)]
 		);
-	//fragColor = normalize(vec4(fragColor_tmp.xyz, 1));
-	fragColor = vec4(normalize(fragColor_tmp).xyz, 1);
-	//fragColor = vec4(fragColor_tmp.xyz/255, 1);
+	fragColor = vec4(normalize(fragColor_tmp.xyz), 1);
 	
-	//fragColor = vec4((lowerleft_coord.x + width / 2.0f) / (width - 1.0f), (lowerleft_coord.y + height / 2.0f) / (height - 1), 0.0f, 1.0f);
+	//int max_color = int(max(max(fragColor_tmp.x, fragColor_tmp.y), fragColor_tmp.z));
+	//fragColor = vec4(fragColor_tmp.xyz / max_color, 1);
+	//fragColor = normalize(vec4(fragColor_tmp.xyz, 1))
+	
+	//https://en.wikipedia.org/wiki/Grayscale#Converting_color_to_grayscale
+	//fragColor_tmp *= vec3(0.2126, 0.7152, 0.0722);
+	//fragColor = vec4(normalize(fragColor_tmp.xyz), 1);
+	
+	//fragColor.y *= 1;
+	//fragColor = vec4(normalize(fragColor_tmp).xyz, 1);
+	//fragColor = vec4(fragColor_tmp.xyz/255, 1);
+#else
+	fragColor = vec4((lowerleft_coord.x + width / 2.0f) / (width - 1.0f), (lowerleft_coord.y + height / 2.0f) / (height - 1), 0.0f, 1.0f);
+#endif
+	
 	
 }
