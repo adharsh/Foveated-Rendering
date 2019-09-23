@@ -1,6 +1,6 @@
 #version 430 core
-//#define SIZE (256*256*3)
-#define SIZE (512*512*3)
+#define SIZE (256*256*3)
+//#define SIZE (512*512*3)
 #define MAX_BOXES 10
 in vec2 uv;
 in vec2 pos;

@@ -26,8 +26,8 @@ int main()
 #if !gen
 	int width, height, num_channels;
 	width = height = 512; num_channels = 3;
-	int scale = 3;
-	Window win = Window("Depth of Field", scale * width, scale * height, glm::vec4(0, 1, 1, 0));
+	int scale = width == 512 ? 3 : 5;
+	Window win = Window("Foveated Rendering", scale * width, scale * height, glm::vec4(0, 1, 1, 0));
 
 	Shader shader = Shader();
 	shader.addVertexShader("res/RectVS.c");
@@ -36,7 +36,7 @@ int main()
 	
 	std::vector<float> frame(3 * width * height);
 	FILE* fp;
-	fp = fopen("res/lena_512.planar", "rb");
+	fp = fopen(std::string("res/butterfly_" + std::to_string(width) + ".planar").c_str(), "rb");
 	fread(&frame[0], sizeof(float), 3 * width * height, fp);
 	fclose(fp);
 	
@@ -55,10 +55,10 @@ int main()
 	f.close();*/
 
 #else
-	int width, height, num_channels;
+	int width = 512, height, num_channels;
 	unsigned char* img = NULL;
-	Texture::load_data("res/lena_512.png", &img, &width, &height, &num_channels);
-	int scale = 5;
+	Texture::load_data(std::string("res/butterfly_" + std::to_string(width) + ".bmp").c_str(), &img, &width, &height, &num_channels);
+	int scale = width == 512? 3 : 5;
 	Window win = Window("Depth of Field", scale * width, scale * height, glm::vec4(0, 1, 1, 0));
 
 	unsigned int N = width;
@@ -73,7 +73,7 @@ int main()
 	summed_area_table(b, N);
 
 	FILE* fp;
-	fp = fopen("res/lena_512.planar", "wb");
+	fp = fopen(std::string("res/butterfly_" + std::to_string(width) + ".planar").c_str(), "wb");
 	fwrite(r, sizeof(float), width * height, fp);
 	fwrite(g, sizeof(float), width * height, fp);
 	fwrite(b, sizeof(float), width * height, fp);
