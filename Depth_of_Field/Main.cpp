@@ -25,8 +25,8 @@ int main()
 {
 #if !gen
 	int width, height, num_channels;
-	width = height = 256; num_channels = 3;
-	int scale = 5;
+	width = height = 512; num_channels = 3;
+	int scale = 3;
 	Window win = Window("Depth of Field", scale * width, scale * height, glm::vec4(0, 1, 1, 0));
 
 	Shader shader = Shader();
@@ -36,7 +36,7 @@ int main()
 	
 	std::vector<float> frame(3 * width * height);
 	FILE* fp;
-	fp = fopen("res/lena_256.planar", "rb");
+	fp = fopen("res/lena_512.planar", "rb");
 	fread(&frame[0], sizeof(float), 3 * width * height, fp);
 	fclose(fp);
 	
@@ -57,7 +57,7 @@ int main()
 #else
 	int width, height, num_channels;
 	unsigned char* img = NULL;
-	Texture::load_data("res/lena_256.png", &img, &width, &height, &num_channels);
+	Texture::load_data("res/lena_512.png", &img, &width, &height, &num_channels);
 	int scale = 5;
 	Window win = Window("Depth of Field", scale * width, scale * height, glm::vec4(0, 1, 1, 0));
 
@@ -73,7 +73,7 @@ int main()
 	summed_area_table(b, N);
 
 	FILE* fp;
-	fp = fopen("res/lena_256.planar", "wb");
+	fp = fopen("res/lena_512.planar", "wb");
 	fwrite(r, sizeof(float), width * height, fp);
 	fwrite(g, sizeof(float), width * height, fp);
 	fwrite(b, sizeof(float), width * height, fp);

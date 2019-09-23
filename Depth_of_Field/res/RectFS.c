@@ -1,5 +1,6 @@
 #version 430 core
-#define SIZE (256*256*3)
+//#define SIZE (256*256*3)
+#define SIZE (512*512*3)
 #define MAX_BOXES 10
 in vec2 uv;
 in vec2 pos;
@@ -174,11 +175,30 @@ void main()
 		frame[D + 2 * int(width) * int(height)] - frame[C + 2 * int(width) * int(height)] - frame[B + 2 * int(width) * int(height)] + frame[A + 2 * int(width) * int(height)]
 		);
 	fragColor = vec4(normalize(fragColor_tmp.xyz), 1);
+	//fragColor *= vec4(231.0f / 162.0f, 208.0f / 144.0f, 183.0f / 134.0f, 1);
+	//162, 144, 134
+	//231, 208, 183
 
-	//fragColor = vec4((fragColor_tmp.xyz) / 255, 1);
+	//fragColor_tmp = fragColor_tmp / 255;
+	//fragColor_tmp.x = fragColor_tmp.x > 1 ? 1 : fragColor_tmp.x;
+	//fragColor_tmp.y = fragColor_tmp.y > 1 ? 1 : fragColor_tmp.y;
+	//fragColor_tmp.z = fragColor_tmp.z > 1 ? 1 : fragColor_tmp.z;
+	//fragColor = vec4(fragColor_tmp.xyz, 1);
+
+	//int orig_id = max(id.x, id.y);
+	//if(orig_id <= 3)
+	//	fragColor = vec4((fragColor_tmp.xyz) / 255, 1);
+	//else if (orig_id <= 4)
+	//	fragColor = vec4((fragColor_tmp.xyz) / 255 / 9, 1);
+	//else if (orig_id <= 5)
+	//	fragColor = vec4((fragColor_tmp.xyz) / 255 / 81, 1);
+	//else
+	//	fragColor = vec4(normalize(fragColor_tmp.xyz), 1);
+	//
 	
-	
-	
+	float scalar = max(id.x, id.y) <= 3 ? 1 : pow(9, max(id.x, id.y) - 3);
+	fragColor = vec4(fragColor_tmp.xyz / 255 / scalar, 1);
+
 	//int max_color = int(max(max(fragColor_tmp.x, fragColor_tmp.y), fragColor_tmp.z));
 	//fragColor = vec4(fragColor_tmp.xyz / max_color, 1);
 	//fragColor = normalize(vec4(fragColor_tmp.xyz, 1))
@@ -191,7 +211,7 @@ void main()
 	//fragColor = vec4(normalize(fragColor_tmp).xyz, 1);
 	//fragColor = vec4(fragColor_tmp.xyz/255, 1);
 #else
-	fragColor = vec4((lowerleft_coord.x + width / 2.0f) / (width - 1.0f), (lowerleft_coord.y + height / 2.0f) / (height - 1), 0.0f, 1.0f);
+	//fragColor = vec4((lowerleft_coord.x + width / 2.0f) / (width - 1.0f), (lowerleft_coord.y + height / 2.0f) / (height - 1), 0.0f, 1.0f);
 #endif
 	
 	
