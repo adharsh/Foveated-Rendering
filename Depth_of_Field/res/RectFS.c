@@ -200,6 +200,8 @@ void main()
 	
 	// //resolution = 3
 	float scalar = max(id.x, id.y) < resolution ? 1 : pow(9, max(id.x, id.y) - resolution + 1);
+	//when box_dim is 1 for entire image
+	//scalar = 1;
 	fragColor = vec4(fragColor_tmp.xyz / 255 / scalar, 1);
 
 
