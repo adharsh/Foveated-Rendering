@@ -4,6 +4,8 @@
 #include "cuda/deinterleave.cuh"
 #include "cuda/summed_area_table.cuh"
 
+#include "ScreenBuffer.h"
+
 #include <algorithm>
 #include <fstream>
 #include <iostream>
@@ -27,12 +29,15 @@ int main()
 	int width, height, num_channels;
 	width = height = 512; num_channels = 3;
 	int scale = width == 512 ? 3 : 5;
+	//scale = 1;
 	Window win = Window("Foveated Rendering", scale * width, scale * height, glm::vec4(0, 1, 1, 0));
 
 	Shader shader = Shader();
 	shader.addVertexShader("res/RectVS.c");
 	shader.addFragmentShader("res/RectFS.c");
 	shader.compileShader();
+
+	ScreenBuffer screen = ScreenBuffer("res/ScreenVS.c", "res/ScreenFS.c", win.getWidth(), win.getHeight(), win.getClearColor(), false, false);
 	
 	std::vector<float> frame(3 * width * height);
 	FILE* fp;
@@ -147,10 +152,6 @@ int main()
 	//for (unsigned int i = k; i < MAX_BOXES; i++)
 	//	box_coords[i] = box_coords[i - 1] + std::pow(3, c++);
 
-	
-
-
-
 
 	for (int i = 0; i < 10; i++)
 		std::cout << box_coords[i] << ", ";
@@ -219,7 +220,9 @@ int main()
 
 	while (!win.closed())
 	{
-		win.clear();
+		//win.clear();
+		ScreenBuffer::initalize();
+		screen.drawToTexture();
 
 		shader.bind();
 		glBindVertexArray(VAO);
@@ -238,10 +241,12 @@ int main()
 		//glActiveTexture(GL_TEXTURE0);
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 
-		glBindVertexArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
 		shader.unbind();
+
+		screen.drawTextureToScreen();
 
 		win.update();
 	}
