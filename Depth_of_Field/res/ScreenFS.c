@@ -53,5 +53,5 @@ void main()
 
 	color = vec4(col, 1.0);
 
-	//color = texture(screenTexture, TexCoords);
+	color = texture(screenTexture, TexCoords);
 }
