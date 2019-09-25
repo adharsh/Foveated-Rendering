@@ -64,13 +64,13 @@ void main()
 			{
 				fragColor = vec4(0, 0.2, 0, 1);
 			}
-			else if (dist_coord.x < -box_coord  && dist_coord.y < -box_coord) //bottom left
+			else if (dist_coord.x <= -box_coord  && dist_coord.y <= -box_coord) //bottom left
 			{
 				lowerleft_coord.x = (box_coord + box_dim) * -1 + eye_coord.x; 
 				lowerleft_coord.y = (box_coord + box_dim) * -1 + eye_coord.y;
 				fragColor = vec4(0, 0.6, 0, 1);
 			}
-			else if (dist_coord.x < -box_coord  && dist_coord.y > box_coord) //top left
+			else if (dist_coord.x <= -box_coord  && dist_coord.y > box_coord) //top left
 			{
 				lowerleft_coord.x = (box_coord + box_dim) * -1 + eye_coord.x;
 				fragColor = vec4(0, 0.4, 0, 1);
@@ -88,7 +88,7 @@ void main()
 			//split into more explicit cases without using abs
 			if (abs(dist_coord.x) > abs(dist_coord.y))
 			{
-				if (dist_coord.x < -box_coord) //left
+				if (dist_coord.x <= -box_coord) //left
 				{
 					lowerleft_coord = ivec2(eye_coord.x - box_coord - box_dim, eye_coord.y - box_dim / 2);
 					fragColor = vec4(0, 0, 0.2, 1);
@@ -102,7 +102,7 @@ void main()
 			}
 			else
 			{
-				if (dist_coord.y < -box_coord) //bottom
+				if (dist_coord.y <= -box_coord) //bottom
 				{
 					lowerleft_coord = ivec2(eye_coord.x - box_dim / 2, eye_coord.y - box_coord - box_dim);
 					fragColor = vec4(0, 0, 0.6, 1);
