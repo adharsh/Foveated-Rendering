@@ -1,6 +1,4 @@
 #version 430 core
-#define SIZE (256*256*3)
-//#define SIZE (512*512*3)
 #define MAX_BOXES 10
 in vec2 uv;
 in vec2 pos;
@@ -12,13 +10,13 @@ uniform int box_dims[MAX_BOXES];
 uniform float width;
 uniform float height;
 //uniform int resolution;
-#define resolution 5
+#define resolution 4
 
 #define RECURS 0
 
 layout(std430, binding = 2) buffer SAT_Frame
 {
-	float frame[SIZE];
+	float frame[];
 };
 
 //	0 2 5 14 41
