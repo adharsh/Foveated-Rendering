@@ -136,6 +136,7 @@ int main()
 	int box_dims[MAX_BOXES] = { 1, 3, 9, 27, 81, 243, 729, 2187, 6561, 19683 };
 	int box_coords[MAX_BOXES] = { 0, 2, 5, 14, 41, 122, 365, 1094, 3281, 9842 };
 	//Todo: box_coords is just box_dim/2 + 1, don't send in another array of ints
+	//then change 0 to 1 and adjust code for that
 	int resolution = 3;
 	 
 	//for (int i = 0; i < k; i++)

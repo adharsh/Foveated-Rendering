@@ -140,7 +140,8 @@ void main()
 	//lowerleft_coord = pos_coord;
 	//box_dim = 1;
 
-#if 1
+	//maybe check this to remove black edges
+#if 1 
 	ivec2 lowerleft_idx = ivec2(lowerleft_coord.x + width / 2, lowerleft_coord.y + height / 2);
 	lowerleft_idx.x = lowerleft_idx.x < 0 ? 0 : lowerleft_idx.x;
 	lowerleft_idx.y = lowerleft_idx.y < 0 ? 0 : lowerleft_idx.y;
@@ -197,6 +198,7 @@ void main()
 	//	fragColor = vec4(normalize(fragColor_tmp.xyz), 1);
 	
 	// //resolution = 3
+	//todo: pass these values in as uniform int array so no pow computation needed
 	float scalar = max(id.x, id.y) < resolution ? 1 : pow(9, max(id.x, id.y) - resolution + 1);
 	//when box_dim is 1 for entire image
 	//scalar = 1;
