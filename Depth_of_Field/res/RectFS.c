@@ -9,8 +9,8 @@ uniform int box_coords[MAX_BOXES];
 uniform int box_dims[MAX_BOXES];
 uniform float width;
 uniform float height;
-//uniform int resolution;
-#define resolution 4
+uniform int resolution;
+//#define resolution 4
 
 #define RECURS 0
 

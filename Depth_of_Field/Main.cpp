@@ -62,6 +62,7 @@ int main()
 #else
 	int width = 512, height, num_channels;
 	unsigned char* img = NULL;
+	//loads only bmps
 	Texture::load_data(std::string("res/butterfly_" + std::to_string(width) + ".bmp").c_str(), &img, &width, &height, &num_channels);
 	int scale = width == 512? 3 : 5;
 	Window win = Window("Depth of Field", scale * width, scale * height, glm::vec4(0, 1, 1, 0));
@@ -137,7 +138,7 @@ int main()
 	int box_coords[MAX_BOXES] = { 0, 2, 5, 14, 41, 122, 365, 1094, 3281, 9842 };
 	//Todo: box_coords is just box_dim/2 + 1, don't send in another array of ints
 	//then change 0 to 1 and adjust code for that
-	int resolution = 3;
+	//int resolution = 3;
 	 
 	//for (int i = 0; i < k; i++)
 	//	box_dims[i] = 1;
@@ -207,7 +208,6 @@ int main()
 	shader.setUniform1iv("box_dims", box_dims, MAX_BOXES);
 	shader.setUniform1f("width", width);
 	shader.setUniform1f("height", height);
-	shader.setUniform1i("resolution", resolution);
 
 	//TODO: make this oop and encapsulated
 	GLuint ssbo;
@@ -216,9 +216,13 @@ int main()
 	glBufferData(GL_SHADER_STORAGE_BUFFER, 3 * width * height * sizeof(float), &frame[0], GL_STATIC_DRAW);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, ssbo);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+	shader.setUniform1i("resolution", 9);
 
 	shader.unbind();
 
+	std::vector<int> keys = { GLFW_KEY_1, GLFW_KEY_2, GLFW_KEY_3, GLFW_KEY_4, GLFW_KEY_5, GLFW_KEY_6, GLFW_KEY_7, GLFW_KEY_8, GLFW_KEY_9 };
+
+	int resolution = 9;
 	while (!win.closed())
 	{
 		//win.clear();
@@ -230,14 +234,26 @@ int main()
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 
+		for(int val : keys)
+			if (win.isKeyPressed(val))
+			{
+				resolution = val - GLFW_KEY_1 + 1;
+				shader.setUniform1i("resolution", resolution);
+				break;
+			}
+
 		double x, y;
 		win.getMousePosition(x, y);
 		//std::cout << "(" << x << ", " << y << ")" << "\n";
-
 		float x_transformed = (x / ((double)win.getWidth()))*2.0f - 1.0f;
 		float y_transformed = ((((double)win.getHeight()) - y) / ((double)win.getHeight()))*2.0f - 1.0f;
 		//TODO, directly convert to UV coordinates
 		shader.setUniform2f("eye_pos", glm::vec2(x_transformed, y_transformed));
+
+
+		//if(glfwGetKey(win.window, GLFW_KEY_E))
+
+
 
 		//glActiveTexture(GL_TEXTURE0);
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
