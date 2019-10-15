@@ -138,7 +138,7 @@ int main()
 	int box_coords[MAX_BOXES] = { 0, 2, 5, 14, 41, 122, 365, 1094, 3281, 9842 };
 	//Todo: box_coords is just box_dim/2 + 1, don't send in another array of ints
 	//then change 0 to 1 and adjust code for that
-	//int resolution = 3;
+	int resolution = 9;
 	 
 	//for (int i = 0; i < k; i++)
 	//	box_dims[i] = 1;
@@ -216,13 +216,12 @@ int main()
 	glBufferData(GL_SHADER_STORAGE_BUFFER, 3 * width * height * sizeof(float), &frame[0], GL_STATIC_DRAW);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, ssbo);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-	shader.setUniform1i("resolution", 9);
+	shader.setUniform1i("resolution", resolution);
 
 	shader.unbind();
 
 	std::vector<int> keys = { GLFW_KEY_1, GLFW_KEY_2, GLFW_KEY_3, GLFW_KEY_4, GLFW_KEY_5, GLFW_KEY_6, GLFW_KEY_7, GLFW_KEY_8, GLFW_KEY_9 };
 
-	int resolution = 9;
 	while (!win.closed())
 	{
 		//win.clear();
