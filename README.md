@@ -7,15 +7,13 @@ Implemented in C++ & CUDA
 https://youtu.be/7tBCs7AYMPg
 
 **Original Image**:
-![butterfly](res\butterfly.jpeg)
-
+![](readme_imgs\butterfly.jpeg)
 
 In the first five images, the fovea is located at the center of the image.
-
-| ![](\res\readme_imgs\1.png) | ![](\res\readme_imgs\2.png) | ![](\res\readme_imgs\3.png) |
+| ![](readme_imgs\1.png) | ![](readme_imgs\2.png) | ![](readme_imgs\3.png) |
 | --- | --- | -- |
 | Magnification 1| Magnification 2| Magnification 3 |
 
-| ![](\res\readme_imgs\4.png) | ![](\res\readme_imgs\5.png) | ![](\res\readme_imgs\5-corner.png) |
+| ![](readme_imgs\4.png) | ![](readme_imgs\5.png) | ![](readme_imgs\5-corner.png) |
 | --- | --- | --- |
 | Magnification 4| Magnification 5| Magnification 5 but Fovea is at Top Left Corner |
