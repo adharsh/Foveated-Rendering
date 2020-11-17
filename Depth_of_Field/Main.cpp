@@ -29,12 +29,15 @@ int main()
 	int width, height, num_channels;
 	width = height = 512; num_channels = 3;
 	int scale = width == 512 ? 3 : 5;
-	//scale = 1;
+	scale = 1;
 	Window win = Window("Foveated Rendering", scale * width, scale * height, glm::vec4(0, 1, 1, 0));
 
 	Shader shader = Shader();
+	//shader.addVertexShader("res/CSC_VS.c");
+	//shader.addFragmentShader("res/CSC_FS.c");
 	shader.addVertexShader("res/RectVS.c");
 	shader.addFragmentShader("res/RectFS.c");
+
 	shader.compileShader();
 
 	ScreenBuffer screen = ScreenBuffer("res/ScreenVS.c", "res/ScreenFS.c", win.getWidth(), win.getHeight(), win.getClearColor(), false, false);
@@ -208,6 +211,13 @@ int main()
 	shader.setUniform1iv("box_dims", box_dims, MAX_BOXES);
 	shader.setUniform1f("width", width);
 	shader.setUniform1f("height", height);
+
+	//for (int i = 0; i < 3 * width * height; i += 3)
+	//{
+	//	frame[i + 0] = 1;
+	//	frame[i + 1] = 0;
+	//	frame[i + 2] = 1;
+	//}
 
 	//TODO: make this oop and encapsulated
 	GLuint ssbo;

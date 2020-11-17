@@ -23,6 +23,7 @@ layout(std430, binding = 2) buffer SAT_Frame
 void main()
 {
 	fragColor = vec4(0);
+	
 	int recurs = resolution;
 
 	ivec2 pos_coord = ivec2((uv.x*(width - 1.0f) - width / 2.0f), (uv.y*(height - 1.0f) - height / 2.0f));
@@ -136,7 +137,6 @@ void main()
 		box_dim = 1;
 	}
 	
-	//todo: to toggle foveated_rendering on/off
 	//lowerleft_coord = pos_coord;
 	//box_dim = 1;
 
@@ -225,4 +225,10 @@ void main()
 #endif
 	
 	
+	//vec2 pos = vec2((width - 1) * uv.x, (1 - uv.y) * (height - 1));
+	////	pos += 0.5f;
+	//int pixelOffset = int((pos.y * width + pos.x) * 3);
+	//
+	//vec4 pix = vec4(frame[pixelOffset + 0], frame[pixelOffset + 1], frame[pixelOffset + 2], 1);
+	//fragColor = pix;
 }

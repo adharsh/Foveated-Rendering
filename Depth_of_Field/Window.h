@@ -46,6 +46,7 @@ public:
 private:
 	bool init();
 
+	// https://stackoverflow.com/a/2315264
 	friend void window_resize_callback(GLFWwindow* window, int width, int height);
 	friend void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	friend void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);

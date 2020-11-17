@@ -35,13 +35,14 @@ void main()
 		);
 
 	float kernel[9] = float[](
-		-1, -1, -1, -1,  9, -1, -1, -1, -1 //Cool Effect
-		//1, 1, 1, 1, -8, 1, 1, 1, 1 //Edge Detection
+		//-1, -1, -1, -1,  9, -1, -1, -1, -1 //Cool Effect
+		1, 1, 1, 1, -8, 1, 1, 1, 1 //Edge Detection
 		//-1, -1, -1, -1, 8, -1, -1, -1, -1 //Edge Detection
 		//-2, -1, 0, -1, 1, 1, 0, 1, 2 //Emboss
 		//1.0 / 16, 2.0 / 16, 1.0 / 16, 2.0 / 16, 4.0 / 16, 2.0 / 16, 1.0 / 16, 2.0 / 16, 1.0 / 16   //Gaussian Blur
      	//1.0/9, 1.0 / 9, 1.0 / 9, 1.0 / 9, 1.0 / 9, 1.0 / 9, 1.0 / 9, 1.0 / 9, 1.0 / 9 //smoothening
 		//0.5997023498159715,0.34553243048391263,-0.2708298674538042,0,47.43192855600873,-0.037703249837783157,0.8609577587992641,0.15059552388459913,0,-36.96841498319127,0.24113635128153335,-0.07441037908422492,0.44972182064877153,0,-7.562075277591283,0,0,0,1,0 //vintage
+		//-1, -1.4142, -1, 0, 0, 0, 1, 1.4142, 1
 		);
 
 	vec3 sampleTex[9];
@@ -53,7 +54,14 @@ void main()
 	for (int i = 0; i < 9; i++)
 		col += sampleTex[i] * kernel[i];
 
-	color = vec4(col, 1.0);
+	//color = vec4(col, 1.0);
+	color = texture(screenTexture, TexCoords);
 
-	//color = texture(screenTexture, TexCoords);
+	//if (TexCoords.x < 0.5)
+	//	color = texture(screenTexture, TexCoords);
+	//else
+	//	color = vec4(col, 1.0);
+
+	//color = vec4(TexCoords, 0, 1);
+	
 }

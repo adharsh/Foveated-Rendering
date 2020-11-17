@@ -39,6 +39,9 @@
     </CudaCompile>
     <CudaCompile Include="cuda\summed_area_table.cu" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{535664D5-6CEA-418D-95EC-160C7DF3627C}</ProjectGuid>
     <RootNamespace>Depth_of_Field</RootNamespace>
